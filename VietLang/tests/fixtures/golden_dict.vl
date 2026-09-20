@@ -1,0 +1,8 @@
+t = { "ten": "An", "tuoi": 20 }
+in_ra(t["ten"])
+in_ra(t.có("tuoi"))
+t["tuoi"] = 21
+in_ra(t["tuoi"])
+in_ra(t.kích_thước())
+t.xóa("ten")
+in_ra(t.có("ten"))

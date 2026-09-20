@@ -1,0 +1,3 @@
+# test_cmd.vl
+kq = chạy_lệnh("echo hello")
+in_ra(kq)

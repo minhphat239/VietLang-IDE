@@ -1,0 +1,27 @@
+## TIEN DO
+M2.4 HOÀN THÀNH — 92/92 tests PASS (80 cũ + 4 aug_assign + 8 methods).
+
+Files sửa/tạo:
+- src/Token.cs: +CONG_BANG, +8 method keywords (TIM, THAY, CAT, CHUA, PHAN_TACH, LOC, MAP, GOP), IsKeyword updated
+- src/Lexer.cs: lex `+=` → CONG_BANG, keywords + suggestions added
+- src/AST.cs: +AugAssignStmt(NameExpr, Expr), +FuncExpr(FuncDeclStmt)
+- src/Parser.cs: parse `x += expr` → AugAssignStmt, postfix accepts keywords after `.`, PhanTichHamExpr for inline hàm
+- src/Interpreter.cs: +BoundMethodValue, ThucHienAugGan, EvalGet returns BoundMethodValue for string/array, GoiBoundMethodValue implements 8 methods
+- tests/TestAugAssign.cs: 4 tests (cong số, chuỗi, nhiều lần, lỗi chưa khai báo)
+- tests/TestMethods.cs: 10 tests (tìm, tìm-không, thay, cắt, chứa, phân_tách, lọc, map, gộp, lỗi method)
+- Program.cs: registered TestAugAssign + TestMethods
+- docs/SPEC_v0_1.md: updated §1-§9 (token, AST, +=, methods)
+
+## RUT KINH NGHIEM (quy trình)
+- Method names là keywords → parser phải accept keyword sau `.` (không chỉ TEN)
+- FuncExpr cần thiết cho inline `hàm(x) {...}` —如果没有, parser fail khi dùng làm arg
+- `hàm(x) {...}` (anonymous) vs `hàm ten(x) {...}` (declaration) cần 2 codepath trong parser
+
+## RUT KINH NGHIEM (UI/UX)
+- N/A
+
+## TU CHAM DIEM
+- Điểm tốt: implement đúng spec, test đầy đủ 12 cases, zero warning
+- Điểm xấu:首次build có 2 fail (arr_map do thiếu FuncExpr, method_loi do错error msg) — cần fix
+- CHƯA VERIFY: METHOD NOT ON NUMBER (5).tìm("x") → đã test, lỗi đúng
+- SOI LAI: nếu làm lại sẽ implement FuncExpr ngay từ đầu (không đợi fail test)

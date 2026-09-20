@@ -1,0 +1,36 @@
+## TIEN DO
+
+M3.1 — 6 builtin xử lý tiếng Việt cho VietLang v0.2.
+
+Trạng thái: **DONE**
+
+### Files đã sửa
+- `src/Parser.cs` — thêm 6 keyword kind vào `PhanTichPrimary` → `NameExpr`
+- `src/Interpreter.cs` — thêm `BangChuanHoa` (134 ký tự) + `BoDauTiengViet()` 
+- `src/Builtins.cs` — thêm 6 builtin: chuẩn_hóa, tìm_từ, tách_từ, tách_câu, đếm_từ, chuẩn_hóa_tìm_kiếm
+- `tests/TestVietNamese.cs` — 12 test (tạo mới)
+- `Program.cs` — đăng ký `TestVietNamese.GetAll()` vào test runner
+- `docs/SPEC_v0_1.md` — cập nhật keywords + builtins table
+
+### Files đã đọc nhưng KHÔNG sửa
+- `src/Token.cs` — đã có 6 keyword sẵn (pre-existing)
+- `src/Lexer.cs` — đã có 6 keyword + suggestions sẵn (pre-existing)
+- `src/AST.cs` — không cần Expr node mới (builtins dùng CallExpr + BuiltinValue)
+
+## RUT KINH NGHIEM (quy trình)
+
+- Token.cs + Lexer.cs đã có sẵn 6 keyword → check file TRƯỚC khi thêm mới
+- Builtins.cs là nơi đăng ký function, KHÔNG cần file mới
+- `vị trí` có khoảng trắng → lexer tách 2 token → phải dùng tên biến không dấu cách
+- `tách_câu` cần trim space sau delimiter: "A. B?" → ["A.", "B?"] không phải ["A.", " B?"]
+
+## RUT KINH NGHIEM (UI/UX)
+
+- Không có.
+
+## TU CHAM DIEM
+
+- Điểm tốt: implement đúng pattern existing (BuiltinValue), không cần AST node mới
+- Điểm xấu: task mô tả "AST.cs (+6 Expr nodes)" nhưng thực tế không cần → mất time phân tích
+- CHƯA VERIFY: SPEC keyword count cập nhật thủ công
+- SOI LAI: lần sau check existing code trước khi tin task description 100%

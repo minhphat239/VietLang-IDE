@@ -1,0 +1,7 @@
+thử {
+  ném("loiABC")
+} ngoại_lệ (e) {
+  in_ra(e)
+} cuối_cùng {
+  in_ra("finallyChay")
+}

@@ -1,0 +1,8 @@
+hàm chào(tên) {
+    trả_về "Xin chào " + tên
+}
+
+lớp Tinh {
+    hàm khởi_tạo(giá_trị) { this.giá_trị = giá_trị }
+    hàm doubled() { trả_về this.giá_trị * 2 }
+}

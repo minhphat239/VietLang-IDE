@@ -1,0 +1,196 @@
+# repl.vl — REPL cho VietLang IDE
+# Chạy: vietlang repl.vl
+
+_history = []
+_REPL_VARS = ["_history", "_REPL_VARS", "hiển_thị_chào_mừng", "hiển_thị_trợ_giúp", "hiển_thị_lịch_sử", "xóa_state", "lưu_state", "restore_state", "lưu_history", "restore_history", "_la_repl_var"]
+
+hàm hiển_thị_chào_mừng() {
+  xóa_màn_hình()
+  in_mau("╔══════════════════════════════════════╗", "cyan")
+  in_mau("║        VietLang REPL v1.0.0          ║", "cyan")
+  in_mau("╚══════════════════════════════════════╝", "cyan")
+  in_ra("")
+  in_ra("Gõ lệnh để thực thi.")
+  in_ra("Lệnh đặc biệt:")
+  in_ra("  lịch_sử      — xem lịch sử lệnh")
+  in_ra("  lưu_session  — lưu state ra file")
+  in_ra("  xóa_session  — xóa file session")
+  in_ra("  xóa_history  — xóa file history")
+  in_ra("  xóa_state    — xóa lịch sử")
+  in_ra("  trợ_giúp     — hiển thị hướng dẫn")
+  in_ra("  thoát        — thoát khỏi REPL")
+  in_ra("")
+}
+
+hàm hiển_thị_trợ_giúp() {
+  in_mau("── Hướng dẫn ──", "yellow")
+  in_ra("Nhập lệnh VietLang để thực thi.")
+  in_ra("Các lệnh đặc biệt:")
+  in_ra("  lịch_sử      — hiển thị tất cả lệnh đã nhập")
+  in_ra("  lưu_session  — lưu biến hiện tại ra file .vlsession")
+  in_ra("  xóa_session  — xóa file .vlsession")
+  in_ra("  xóa_history  — xóa file .vlhistory")
+  in_ra("  xóa_state    — xóa toàn bộ lịch sử")
+  in_ra("  trợ_giúp     — hiển thị hướng dẫn này")
+  in_ra("  thoát        — thoát khỏi REPL")
+  in_ra("")
+}
+
+hàm hiển_thị_lịch_sử() {
+  n = độ_dài(_history)
+  nếu n == 0 {
+    in_ra("(chưa có lệnh nào)")
+    trả_về
+  }
+  i = 0
+  trong_lúc i < n {
+    stt = chuyển_chuỗi(i + 1)
+    in_ra(stt + " │ " + _history[i])
+    i = i + 1
+  }
+}
+
+hàm xóa_state() {
+  _history = []
+  in_ra("Đã xóa lịch sử.")
+}
+
+hàm _la_repl_var(ten) {
+  với repl_var trong _REPL_VARS {
+    nếu repl_var == ten {
+      trả_về đúng
+    }
+  }
+  trả_về sai
+}
+
+hàm lưu_state() {
+  tat_ca = lấy_tất_cả_biến()
+  state = {}
+  dem = 0
+  với key trong tat_ca {
+    nếu _la_repl_var(key) == sai {
+      state[key] = tat_ca[key]
+      dem = dem + 1
+    }
+  }
+  thử {
+    noi_dung = json_gộp(state)
+    ghi_file(".vlsession", noi_dung)
+    in_ra("Đã lưu session (" + chuyển_chuỗi(dem) + " biến).")
+  } ngoại_lệ (e) {
+    in_mau("Lỗi khi lưu session: " + e, "red")
+  }
+}
+
+hàm restore_state() {
+  nếu tồn_tại(".vlsession") {
+    thử {
+      noi_dung = đọc_file(".vlsession")
+      state = json_phân_tách(noi_dung)
+      dem = 0
+      với key trong state {
+        gán_biến(key, state[key])
+        dem = dem + 1
+      }
+      in_ra("Đã restore session (" + chuyển_chuỗi(dem) + " biến).")
+    } ngoại_lệ (e) {
+      in_mau("Không thể restore session: " + e, "red")
+    }
+  }
+}
+
+hàm lưu_history() {
+  thử {
+    trong_lúc độ_dài(_history) > 1000 {
+      mảng_mới = []
+      i = 1
+      trong_lúc i < độ_dài(_history) {
+        thêm(mảng_mới, _history[i])
+        i = i + 1
+      }
+      _history = mảng_mới
+    }
+    noi_dung = json_gộp(_history)
+    ghi_file(".vlhistory", noi_dung)
+  } ngoại_lệ (e) {
+    in_mau("Lỗi khi lưu history: " + e, "red")
+  }
+}
+
+hàm restore_history() {
+  nếu tồn_tại(".vlhistory") {
+    thử {
+      noi_dung = đọc_file(".vlhistory")
+      _history = json_phân_tách(noi_dung)
+    } ngoại_lệ (e) {
+      in_mau("Không thể restore history: " + e, "red")
+    }
+  }
+}
+
+restore_history()
+restore_state()
+hiển_thị_chào_mừng()
+
+trong_lúc đúng {
+  in_mau(">>> ", "green")
+  lệnh = nhập()
+  nếu lệnh == "" {
+    lưu_history()
+    thoát()
+  }
+  nếu lệnh == "thoát" {
+    in_ra("Tạm biệt!")
+    lưu_history()
+    thoát()
+  }
+  nếu lệnh == "lịch_sử" {
+    hiển_thị_lịch_sử()
+    tiếp
+  }
+  nếu lệnh == "lưu_session" {
+    lưu_state()
+    tiếp
+  }
+  nếu lệnh == "xóa_session" {
+    nếu tồn_tại(".vlsession") {
+      thử {
+        chạy_lệnh("del .vlsession")
+        in_ra("Đã xóa file .vlsession.")
+      } ngoại_lệ (e) {
+        in_mau("Lỗi khi xóa session: " + e, "red")
+      }
+    } không_thì {
+      in_ra("Không có file session nào.")
+    }
+    tiếp
+  }
+  nếu lệnh == "xóa_state" {
+    xóa_state()
+    tiếp
+  }
+  nếu lệnh == "xóa_history" {
+    nếu tồn_tại(".vlhistory") {
+      thử {
+        chạy_lệnh("del .vlhistory")
+        in_ra("Đã xóa file .vlhistory.")
+      } ngoại_lệ (e) {
+        in_mau("Lỗi khi xóa history: " + e, "red")
+      }
+    } không_thì {
+      in_ra("Không có file history nào.")
+    }
+    tiếp
+  }
+  nếu lệnh == "trợ_giúp" {
+    hiển_thị_trợ_giúp()
+    tiếp
+  }
+  thêm(_history, lệnh)
+  thử {
+    thực_thi(lệnh)
+  } ngoại_lệ (e) {
+    in_mau("Lỗi: " + e, "red")
+  }
+}

@@ -1,0 +1,57 @@
+# ============================================================
+# VietLang — bài 01: quản lý học sinh
+# Chạy (từ thư mục gốc): dotnet run --project VietLang -- demo/bai_01.vl
+# Gồm: lớp, constructor (khởi_tạo), this, hàm, mảng, vòng lặp,
+# if-chain nhiều dòng, nối chuỗi, các builtin
+# in_ra / độ_dài / thêm / chuyển_số / chuyển_chuỗi
+# ============================================================
+
+# 1. Lớp HọcSinh: constructor + phương thức
+lớp HọcSinh {
+  hàm khởi_tạo(tên, điểm) {
+    this.tên = tên
+    this.điểm = điểm
+  }
+  hàm mô_tả() {
+    trả_về this.tên + " — điểm " + chuyển_chuỗi(this.điểm)
+  }
+  hàm xếp_loại() {           # if-chain nhiều dòng
+    nếu this.điểm >= 8 {
+      trả_về "Giỏi"
+    }
+    còn_nếu this.điểm >= 6 {
+      trả_về "Khá"
+    }
+    còn_nếu this.điểm >= 4 {
+      trả_về "Trung bình"
+    }
+    không_thì {
+      trả_về "Yếu"
+    }
+  }
+}
+
+# 2. Hàm tính trung bình điểm của cả lớp
+hàm trung_bình(danh_sách) {
+  tổng = 0
+  với hs trong danh_sách {
+    tổng = tổng + hs.điểm
+  }
+  trả_về tổng / độ_dài(danh_sách)
+}
+
+# 3. Tạo mảng học sinh (gọi lớp như hàm để tạo đối tượng)
+ds = [HọcSinh("Nguyễn Văn An", 9), HọcSinh("Trần Thị Bình", 7), HọcSinh("Lê Văn Cường", chuyển_số("5"))]
+thêm(ds, HọcSinh("Phạm Thu Dung", 3))
+
+# 4. Vòng lặp trong_lúc + truy cập mảng theo chỉ số
+i = 0
+n = độ_dài(ds)
+trong_lúc i < n {
+  hs = ds[i]
+  in_ra(i + 1, hs.mô_tả(), "→", hs.xếp_loại())
+  i = i + 1
+}
+
+# 5. Vòng lặp với … trong + hàm tự đặt — báo trung bình
+in_ra("Trung bình cả lớp:", trung_bình(ds))

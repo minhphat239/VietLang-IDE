@@ -1,0 +1,3 @@
+hàm chào(name) {
+    trả_về "Xin chào " + name
+}

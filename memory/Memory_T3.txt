@@ -1,0 +1,25 @@
+# Memory_T3 — Interpreter + Builtins + Program.cs (VietLang v0.1)
+
+## TIEN DO
+- XONG: `src/Interpreter.cs` (tree-walking), `src/Builtins.cs` (6 builtin), `tests/TestInterpreter.cs` (14 case), `Program.cs` (thật: `-- test`, `<tệp.vl>`, hướng dẫn).
+- Bằng chứng: `dotnet build` exit 0 (0 warning/error); `dotnet run -- test` → 44/44 PASS (14 lexer + 16 parser + 14 interpreter), exit 0. Chạy thật `.vl` đúng output + exit 0; lỗi chia 0 / cú pháp / thiếu file in `e.Message`, exit 1; không đối số → hướng dẫn, exit 0.
+- Ngữ nghĩa: giá trị = double/string/List<bool>/null/FunctionValue/ClassValue/InstanceValue/BoundMethod/BuiltinValue; PhamVi (Dictionary + Parent) tra ngược chain, gán tìm ở đâu set đó; hàm new PhamVi(Closure) bind tham số; Class → Instance + gọi khởi_tạo; số tham số phải khớp (`hàm 'x' cần n tham số, nhận m`); `+` chỉ số+số / chuỗi+chuỗi (không tự stringify); `và`/`hoặc` short-circuit trả bool; so sánh không chéo kiểu; chantri: sai/0/""/rỗng/[] → false; lỗi format `Lỗi thực thi dòng <Dong>: <chi tiết>`.
+- Cơ chế lỗi: RuntimeError (public) + ReturnSignal/BreakSignal/ContinueSignal (internal, không lộ); `_loopDepth` để phát hiện `dừng`/`tiếp` ngoài vòng lặp; Run bắt ReturnSignal tầng ngoài → "trả_về nằm ngoài hàm".
+- Lưu ý: `Tests` dùng `List<LexTest>` (pattern sẵn). Console.SetOut(StringWriter) để bắt output; chuẩn hóa `\r\n`→`\n`.
+
+## RUT KINH NGHIEM (quy trình)
+- Lỗi tiềm ẩn dịch vụ: doGhi builtin bằng `global.GanDay` (gán trực tiếp, không đi chain) — đúng vì toàn cục. Với biến user dùng `env.Gan`.
+- Lỗi: ban đầu định xử lý `dừng`/`tiếp` bằng try/catch ở ThucHien — phức tạp và sai khi lồng hàm/vòng. Bài học: dùng `_loopDepth` đếm độ sâu, phát hiện ngoài vòng lặp NGAY tại stmt thay vì truyền signal lên. Áp dụng: đã xong.
+- Lỗi theo dõi: `StringWriter` trong test mượn bắt output in_ra — đừng quên `Console.SetOut` phục hồi trong finally kẻo rò vào test sau.
+- Bài học: interpreter cần xác minh bằng file `.vl` thật ngoài self-test (kiểu chạy `dotnet run -- <file>`) — bắt được luồng File.ReadAllText UTF-8 + exit code; đừng chỉ tin `-- test`.
+
+## RUT KINH NGHIEM (UI/UX)
+- Thông báo lỗi runtime phải có số dòng + tiếng Việt đúng trọng tâm: "chia cho số 0", "biến 'x' chưa được gán", "chỉ số N ngoài phạm vi mảng (0..n-1)", "không chuyển được 'x' thành số". Đủ để user sửa không cần nhìn lại source.
+- Tránh thuật ngữ C# trong lỗi (đừng nói "ReferenceEquals", "List"). Đã dùng "mảng", "chuỗi", "đối tượng".
+- `in_ra` in nhiều đối số cách nhau dấu cách — quen thuộc như `print`/`echo`.
+
+## TU CHAM DIEM
+- Tốt: build + test xanh ngay lượt đầu (44/44); xác minh thêm bằng file thật + 3 đường lỗi (runtime/parse/missing file) + no-args; giữ đúng ranh giới file (không đụng Token/AST/Lexer/Parser/SPEC); runtime semantics bám chính xác ngữ nghĩa chốt.
+- Xấu: (nhỏ) không tự test case `chuyển_số` dương, `nhập`, string index ngoài phạm vi chuỗi — chưa verify đầy đủ mép.
+- CHƯA VERIFY: hành vi chính xác của `còn_nếu`/`không_thì` nhiều dòng — PARSER không bỏ NEWLINE giữa chuỗi if-chain, nên `}\ncòn_nếu` thành ParseError "không mong đợi". Đây là giới hạn parser (ngoài phạm vi T3 — đã báo summary).
+- SOI LAI: lần sau cân nhắc thêm test cho `chuyển_số("3.5")`, chuỗi vượt index, `thêm` sai loại param để bọc mép runtime.

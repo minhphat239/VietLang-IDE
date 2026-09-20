@@ -1,0 +1,5 @@
+khai_báo "circular_a.vl"
+
+hàm ham_b() {
+    trả_về "B"
+}

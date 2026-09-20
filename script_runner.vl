@@ -1,0 +1,107 @@
+# script_runner.vl — chạy file .vl với error display đẹp
+# Chạy: vietlang script_runner.vl <file.vl>
+
+tham_sô = lấy_tham_số()
+độ_ds = độ_dài(tham_sô)
+
+nếu độ_ds == 0 {
+  in_mau("Cách dùng: vietlang script_runner.vl <file.vl>", "yellow")
+  in_mau("Tham số: --time (thời gian), --verbose (chi tiết)", "yellow")
+  thoát()
+}
+
+file = tham_sô[0]
+hiện_tg = sai
+hiện_ct = sai
+idx = 1
+trong_lúc idx < độ_ds {
+  t = tham_sô[idx]
+  nếu t == "--time" {
+    hiện_tg = đúng
+  }
+  nếu t == "--verbose" {
+    hiện_ct = đúng
+  }
+  idx = idx + 1
+}
+
+nếu không tồn_tại(file) {
+  in_mau("Không tìm thấy file: " + file, "red")
+  thoát()
+}
+
+bắt_đầu = ""
+nếu hiện_tg {
+  bắt_đầu = chạy_lệnh("powershell -c (Get-Date -UFormat %%s)")
+}
+
+# Chạy file qua chạy_lệnh, bắt stdout + stderr
+kết_quả = chạy_lệnh("dotnet run --project D:\\Documents\\VietLang\\VietLang -- " + file)
+
+nếu hiện_tg {
+  kt = chạy_lệnh("powershell -c (Get-Date -UFormat %%s)")
+  tg = chuyển_số(kt) - chuyển_số(bắt_đầu)
+  in_mau("Thời gian: " + chuyển_chuỗi(tg) + "s", "cyan")
+}
+
+# Kiểm tra kết quả có chứa lỗi không
+vi_tri_loi = tìm_từ(kết_quả, "Lỗi")
+nếu độ_dài(vi_tri_loi) > 0 {
+  in_mau("═══════════════════════════════════════════════════", "red")
+  in_mau("  LỖI: " + kết_quả, "red")
+  in_mau("═══════════════════════════════════════════════════", "red")
+
+  # Tìm số dòng từ thông báo lỗi
+  ket_qua_tim = tìm_kiếm(kết_quả, "dòng (\\d+)")
+  nếu độ_dài(ket_qua_tim) > 0 {
+    teks_dong = ket_qua_tim[0]
+    so_dong_str = thay_the(teks_dong, "dòng ", "")
+    nếu độ_dài(so_dong_str) > 0 {
+      so_dong = chuyển_số(so_dong_str)
+
+      nếu hiện_ct {
+        in_mau("  Nguồn: " + file + ":" + so_dong_str, "yellow")
+      }
+
+      # Lấy dòng bị lỗi bằng PowerShell
+      stt = chuyển_chuỗi(so_dong - 1)
+      dong_bi_loi = chạy_lệnh("powershell -c \"(Get-Content -LiteralPath '" + file + "')[" + stt + "]\"")
+
+      in_mau("  " + so_dong_str + " | " + dong_bi_loi, "red")
+
+      # Mũi tên ^
+      dau = ""
+      d = 0
+      trong_lúc d < độ_dài(so_dong_str) + 3 {
+        dau = dau + " "
+        d = d + 1
+      }
+      d = 0
+      trong_lúc d < độ_dài(dong_bi_loi) {
+        dau = dau + "^"
+        d = d + 1
+      }
+      in_mau("  " + dau, "red")
+
+      nếu hiện_ct {
+        # Dòng trước
+        nếu so_dong > 1 {
+          truoc = chạy_lệnh("powershell -c \"(Get-Content -LiteralPath '" + file + "')[" + chuyển_chuỗi(so_dong - 2) + "]\"")
+          in_mau("  " + chuyển_chuỗi(so_dong - 1) + " | " + truoc, "white")
+        }
+        # Dòng sau
+        sau = chạy_lệnh("powershell -c \"(Get-Content -LiteralPath '" + file + "')[" + chuyển_chuỗi(so_dong) + "]\"")
+        nếu độ_dài(sau) > 0 {
+          in_mau("  " + chuyển_chuỗi(so_dong + 1) + " | " + sau, "white")
+        }
+      }
+    }
+  }
+
+  in_mau("═══════════════════════════════════════════════════", "red")
+} không_thì {
+  # Không có lỗi — chạy thành công
+  nếu độ_dài(kết_quả) > 0 {
+    in_ra(kết_quả)
+  }
+}

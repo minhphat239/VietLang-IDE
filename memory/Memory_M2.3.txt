@@ -1,0 +1,36 @@
+# Memory_M2.3 — Module (khai_báo) cho VietLang v0.1
+
+## TIEN DO
+- M2.3 HOÀN THÀNH — dotnet build exit 0, dotnet run -- test → 78/78 PASS (8/8 module tests).
+- M2.3b RENAME: `nhập` → `khai_báo` — dotnet build exit 0, dotnet run -- test → 78/78 PASS.
+- Files đã sửa/tạo:
+  - `src/Token.cs:36` — thêm KHAI_BAO enum (rename từ NHAP)
+  - `src/Token.cs:78` — thêm KHAI_BAO vào IsKeyword
+  - `src/Lexer.cs:49` — thêm "khai_báo"→KHAI_BAO (rename từ "nhập"→NHAP)
+  - `src/Lexer.cs:72` — thêm "khai_bao"→"khai_báo" gợi ý (rename từ "nap"→"nhập")
+  - `src/AST.cs:141-148` — thêm ImportStmt(Path: Expr)
+  - `src/Parser.cs:117` — thêm case KHAI_BAO
+  - `src/Parser.cs:309-317` — thêm PhanTichNhap() + error message rename
+  - `src/Interpreter.cs:3` — thêm using System.IO
+  - `src/Interpreter.cs:149-151` — thêm _currentDir, _visitedPaths fields
+  - `src/Interpreter.cs:168-178` — thêm Run(filePath, sharedGlobal, visited) overload
+  - `src/Interpreter.cs:220` — thêm ImportStmt case
+  - `src/Interpreter.cs:285-310` — thêm ThucHienNhap()
+  - `tests/TestModule.cs` — 8 tests, string literals dùng "khai_báo"
+  - `tests/fixtures/math.vl, util.vl, circular_a.vl, circular_b.vl, nested.vl` — fixture files
+  - `Program.cs:80` — đăng ký TestModule
+  - `docs/SPEC_v0_1.md` — keyword "khai_báo" trong §5
+
+## RUT KINH NGHIEM (quy trình)
+- Lỗi → Circular import _visitedPaths phải là tham chiếu chung (reference) giữa parent/child Interpreter, không được tạo mới mỗi lần. Nếu dùng instance field thì phải pass đúng reference.
+- Lỗi → Run(program, filePath, sharedGlobal, visited) phải handle null sharedGlobal (tạo PhamVi mới + DangKy builtins), nếu không sẽ NullRef.
+- Bài học: Khi thêm feature涉及文件路径解析, test helper cần thay đổi cách tạo Interpreter (không thể dùng Chay(src) cũ nữa, phải dùng Run overload có filePath).
+
+## RUT KINH NGHIEM (UI/UX)
+- Gợi ý "khai_bao"→"khai_báo" giúp người dùng mới viết thiếu dấu thấy gợi ý đúng trong thông báo lỗi.
+
+## TU CHAM DIEM
+- Điểm tốt: Implement đúng spec — 8/8 tests pass ngay lần đầu, circular import hoạt động đúng, global env share không tạo namespace.
+- Điểm xấu: Chưa có test cho nested import từ file import (nested.vl nhập math.vl rồi test vuông(n)).
+- CHƯA VERIFY: edge case import file trống, import file có syntax error (phải propagate lỗi đúng).
+- SOI LAI: Lần sau sẽ thêm test cho import file có lỗi syntax/runtime để verify error propagation.

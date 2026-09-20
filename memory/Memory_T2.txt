@@ -1,0 +1,28 @@
+# Memory_T2 — Parser (VietLang v0.1)
+
+## TIEN DO
+- XONG: `src/Parser.cs` (~290 dòng) + `tests/TestParser.cs` (14 case) + `Program.cs` (đăng ký test parser vào vòng `-- test`, tối thiểu).
+- XONG: T2.1 — AST thêm `BoolLit`/`NullLit` (src/AST.cs), Parser dựng đúng cho `đúng`/`sai`/`rỗng` thay vì NameExpr; test mới `bool_va_rong`; 29/29 test PASS.
+- XONG: T2.2 — `Stmt.Dong` (int, 1-based) thêm ở base class src/AST.cs; Parser gán dòng cho MỌI lệnh (gồm cả `còn_nếu` lồng trong Otherwise và phương thức trong `lớp`); test mới `dong_cua_lenh`; 30/30 test PASS.
+- XONG: T2.3 — `còn_nếu`/`không_thì` được phép đứng NGAY SAU dấu xuống dòng (kiểu Python nhiều dòng): `PhanTichNeu` gọi helper `NhinCauNoiTiep()` (src/Parser.cs) sau `}` mỗi nhánh — save `_i` → bỏ qua NEWLINE/`;` → gặp `còn_nếu`/`không_thì` thì tiếp tục chuỗi, ngược lại rollback `_i = save` (newline sau đó do `DoiNganCach` dùng làm dấu kết thúc lệnh). `Dong` của nhánh `còn_nếu` = dòng của từ khóa `còn_nếu`. Test mới `neu_chain_nhieu_dong`; 45/45 PASS (14 lexer + 17 parser + 14 interpreter).
+- Bằng chứng: `dotnet build` exit 0 (0 warning/error); `dotnet run -- test` → 28/28 PASS (14 lexer + 14 parser), exit 0.
+- Ngữ pháp: lệnh gán/biểu thức, hàm, lớp, nếu-còn_nếu-không_thì, trong_lúc, với…trong, trả_về, dừng, tiếp; kết thúc lệnh NEWLINE hoặc `;`; precedence hoặc<và<==!=<<=>=<<+-><*/%<unary<postfix<primary; postfix `.`/`()`/`[]` nhiều tầng; mảng `[]`.
+- Lệch contract: `đúng`/`sai`/`rỗng` parse thành `NameExpr("đúng"/"sai"/"rỗng")` vì AST không có node bool/null (T2 cấm thêm node) — T3 phải coi đây là hằng số. `còn_nếu` = `IfStmt` lồng trong `Otherwise` (List<Stmt>).
+
+## RUT KINH NGHIEM (quy trình)
+- Lệch thiết kế được chốt: từ khóa literal (đúng/sai/rỗng) cần node AST riêng, không vay mượn NameExpr. Áp dụng: AST có BoolLit/NullLit từ giờ.
+- Lỗi: test 11 assert sai vế — `b != 2` có Left=b, Right=NumLit(2) nhưng tôi Ep<NameExpr> lên Right → FAIL "b". Bài học: khi assert BinaryExpr phải trải đúng vế theo token, đừng khẳng định bằng cảm giác. Áp dụng: sửa assert, test PASS sau lần chạy lại.
+- Lỗi: refactor chuỗi `nếu`/`không_thì` bỏ sót việc tiêu thụ từ khóa `không_thì` (vốn `Cuon` tự Next) → PhanTichKhoi nhận `không_thì` → "mong đợi dấu '{'". Bài học: khi thay `Cuon(k)` bằng check + nhánh rẽ, phải tự `Next()`/consume token tường minh như dispatch lệnh. Áp dụng: thêm `Next(); // không_thì` trước PhanTichKhoi, 45/45 xanh.
+- Lỗi: dispatch `dừng`/`tiếp` dùng switch expression + helper `ConsumeStmt` (không hề Next()) → token không được tiêu thụ, lỗi hành vi ngầm. Bài học: mỗi branch consume token tường minh, self-review đường consume trước build. Áp dụng: đổi sang switch lệnh với `Next()`; đã self-review toàn parser.
+- Lỗi: `PhanTichHam` trả `Stmt` nhưng `ClassDeclStmt.Methods` cần `FuncDeclStmt` → CS1503. Bài học: đối chiếu kiểu trả về với AST node trước khi viết. Áp dụng: đổi return type, build xanh.
+- Bài học tốt: ép kiểu I+T trong `Ep<T>` (KiemTra is T rồi cast) giúp bắt lỗi assert tại đúng vị trí với message rõ — giữ pattern này.
+- Bài học: có 2 nơi tạo node Stmt KHÔNG đi qua dispatcher — `còn_nếu` (IfStmt lồng trong Otherwise, src/Parser.cs PhanTichNeu) và phương thức trong `lớp` (FuncDeclStmt, PhanTichLop gọi thẳng PhanTichHam). Khi thêm wrapper/field chung cho Stmt phải quét cả 2 chỗ này + branch `dừng`/`tiếp` inline trong PhanTichCauLenh.
+
+## RUT KINH NGHIEM (UI/UX)
+- Không áp dụng — backend.
+
+## TU CHAM DIEM
+- Tốt: đọc đủ Token/AST/Lexer/SPEC/TestLexer/Program trước khi code 1 lượt; precedence đúng SPEC; hint thiếu dấu dùng đúng `Lexer.GoiYThieuDau`; tôn trọng boundary (không sửa Token/AST/Lexer/SPEC); 28/28 xanh.
+- Xấu: 2 lỗi mình tự tạo (assert lệch vế, dispatch không consume) — cả 2 bắt được nhờ build/test, không sót ra.
+- CHƯA VERIFY: đúng/sai/rỗng chưa có test riêng; còn_nếu 3+ tầng chưa test; gán `a.b=`/`a[i]=` chưa test; lỗi DOANH nhúng trong biểu thức (vd `1 va 2`) chưa có hint.
+- SOI LAI: lần sau viết assert theo chuỗi duyệt cây (helper nhỏ) thay vì cast tầng — ít nhầm vế; thêm test cho đúng/sai/rỗng và gán member/index ở T3 nếu cần.

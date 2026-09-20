@@ -1,0 +1,27 @@
+# Memory_T4 — Demo + README (M1)
+
+## TIEN DO
+- [x] T4: `demo/bai_01.vl` (56 dòng) — lớp HọcSinh (`khởi_tạo`, `mô_tả`, `xếp_loại` if-chain nhiều dòng), hàm `trung_bình`, mảng đối tượng, `trong_lúc`, `với...trong`, thêm/chuyển_số/chuyển_chuỗi/độ_dài/in_ra — DONE 2026-09-20
+- [x] `README.md` (9 mục: giới thiệu, yêu cầu, cách chạy, ví dụ nhanh, từ khóa, builtins, thư mục, lộ trình M1→M5+, đóng góp) — DONE
+- [x] Verify: build exit 0 · test 45/45 PASS · demo exit 0, output đúng
+- [x] T4.1: sửa 3 điểm tài liệu (header lệnh demo, format lỗi runtime, typo `chuyển_chuỗi`) — DONE
+- [x] `memory/Memory_T4.txt` — DONE
+
+## RUT KINH NGHIEM (quy trình)
+- Lỗi → Bài học → Áp dụng
+- `chuyển_số("5")` dùng trong mảng literal để demo builtin mà vẫn giữ demo deterministic → Áp dụng: khi cần demo builtin khó (nhập()...) hãy dùng biến thể không cần stdin, hoặc pipe input, tránh treo khi verify.
+- Lần đầu viết demo dài hơn 60 dòng → Bài học: phải đếm dòng TRƯỚC khi viết, không viết rồi mới cắt → Áp dụng: đặt giới hạn dòng vào tiêu chí viết ngay từ khung nháp.
+- Verify 3 phép (build/test/demo) chạy chung 1 lệnh → tiết kiệm tool call, có exit code từng bước → Áp dụng: gộp nhiều lệnh verify độc lập cùng số exit code.
+- Header/README ghi lệnh "trông có vẻ đúng" không chạy (`dotnet run -- ...` thiếu `--project`) → Bài học: lệnh mẫu trong tài liệu phải chạy lại được bằng lệnh THẬT trước khi chốt, không đoán → Áp dụng: mọi lệnh mẫu phải được verify thực thi từ root.
+
+## RUT KINH NGHIEM (UI/UX — tài liệu & ngôn ngữ dễ đọc cho người Việt)
+- Lỗi → Bài học → Áp dụng
+- README tiếng Việt nên dùng header `##` thống nhất, cột "giống Python" giúp người biết Python đọc nhanh → Áp dụng: bảng từ khóa/builtins có thêm cột tương đương Python.
+- Comment trong demo `.vl` phải đặt đúng cấu trúc lệnh (comment sau `}` trên cùng dòng như `hàm xếp_loại() { ... # comment` chỉ hợp lệ ở cuối) → Áp dụng: comment demo đặt đầu dòng hoặc cuối dòng an toàn, đã thử thật trên engine.
+- Ví dụ nhanh trong README phải chạy được hệ quả (đã verify toàn bộ demo chứ không chỉ ví dụ rời) → Áp dụng: khi trích ví dụ, chạy đoạn gốc chứa phương thức có thật trong engine.
+
+## TU CHAM DIEM
+- Điểm tốt: demo chạy ngay lần 1 (exit 0), cover nhiều tính năng trong 56 dòng; verify 3/3 bằng lệnh với exit code rõ; README đủ 9 mục theo DoD.
+- Điểm xấu: có đoạn README "ép ép về chuỗi" — lỗi chính tả lặp 2 lần đã sửa lúc viết nhưng vẫn có nguy cơ; chưa dùng đủ builtin `nhập()` (có lý do: treo stdin).
+- CHƯA VERIFY: chưa chạy `dotnet run -- demo/bai_01.vl` của bên ngoài project (manager sẽ chạy lại như lệ thường); chưa kiểm hiển thị UTF-8 trên console khác (cp437).
+- SOI LAI: lần sau trước khi coi README "xong" sẽ đọc lại nguyên văn 1 lần để bắt chính tả, không dựa vào trí nhớ.

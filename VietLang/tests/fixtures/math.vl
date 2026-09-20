@@ -1,0 +1,7 @@
+hàm cộng(a, b) {
+    trả_về a + b
+}
+
+hàm nhân(a, b) {
+    trả_về a * b
+}

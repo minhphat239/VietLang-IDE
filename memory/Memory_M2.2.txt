@@ -1,0 +1,19 @@
+## TIEN DO
+- M2.2 DONE: try/catch/finally/ném cho VietLang v0.1
+- 70/70 test pass (58 cũ + 12 mới exception)
+- Files: Token.cs, Lexer.cs, AST.cs, Parser.cs, Interpreter.cs, tests/TestException.cs, Program.cs, docs/SPEC_v0_1.md
+
+## RUT KINH NGHIEM (quy trình)
+- Lỗi → Bài học → Áp dụng
+- BoQuaNganCach() trong parser tự nuốt NEWLINE phân cách → dùng save/restore pattern (giống NhinCauNoiTiep) khi cần peek-ahead mà không muốn mất separator
+- ném() ngoài try phải convert thành RuntimeError ở Run() — exception user-level (VietLangException) phải được wrap thành RuntimeError khi không còn scope catch nào
+- TryStmt structure: inner try-catch(VietLangException) + outer try-finally(RETURN/BREAK/CONTINUE) + re-throw signals sau finally
+
+## RUT KINH NGHIEM (UI/UX)
+- (chưa có cho exception feature)
+
+## TU CHAM DIEM
+- Điểm tốt: làm đúng pattern ReturnSignal/BreakSignal/ContinueSignal cho finally re-throw; catch-all không bind tên vẫn bắt được
+- Điểm xấu: ban đầu nuốt VietLangException khi không có catch body (phải throw lại); sai separator parsing cho try-catch-finally
+- CHƯA VERIFY: nested try-catch-finally lồng sâu (>1 level), try-catch trong hàm gọi nhau
+- SOI LAI: lần sau khi thêm block statement mới, kiểm tra xem BoQuaNganCach có nuốt NEWLINE phân cách không — luôn dùng save/restore khi peek-ahead

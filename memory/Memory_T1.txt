@@ -1,0 +1,21 @@
+# MEMORY_T1 — Skeleton project + Token + AST + Lexer + tests + SPEC (2026-09-20)
+
+## TIEN DO
+- DONE. Tạo khung project .NET 8 tại `VietLang/`: VietLang.csproj, src/{Token.cs, AST.cs, Lexer.cs}, tests/TestLexer.cs, Program.cs (tạm) + `docs/SPEC_v0_1.md`.
+- T1.1 (2026-09-20): fix literal âm ở lexer — `-` giờ LUÔN là token TRU; số âm = UnaryExpr do parser dựng. Spec/test/memory cập nhật. Build exit 0, test 14/14 PASS.
+- T2 (Parser) / T3 (Interpreter+Budins+Program.cs thật) dựa trên SPEC_v0_1.md và các class đã có.
+
+## RUT KINH NGHIEM (quy trình)
+- Lỗi: literal âm ở lexer làm vỡ phép trừ nhị phân (5-3→5,-3). Bài học: `-` luôn là toán tử, số âm để parser dựng UnaryExpr. Áp dụng: T2 giữ nguyên UnaryExpr; không đưa số âm trở lại lexer.
+- Lỗi: test 8 viết source "hàm f(\n a,\n b\n)" — `\n` cuối NẰM TRONG `()` → bị bỏ, không có NEWLINE sau `)`; assertion "1 NEWLINE" fail. → Bài học: khi viết test newline, kiểm trajectory từng `\n` theo trạng thái giữa test; sửa bằng cách thêm `\n` SAU `)` trong source. → Áp dụng: test mới về newline luôn vẽ lại chuỗi nguồn và đếm tay.
+- Lỗi tiềm ẩn: ga flip "5-3" khiến 2 số dính nhau theo đúng contract (dấu trừ đứng sát số đầu = literal âm) — T2/Parser v.v. Cảnh báo để parser xử lý `a - b` (có space) khác `5-3`. → Áp dụng: đã ghi SPEC mục 1. [T1.1: đã fix — xem dòng 9; giữ lại để T2 biết lịch sử, cảnh báo hết hiệu lực]
+- Contract mâu thuẫn về NEWLINE trong `{}` => quyết định: phát (khối `{}` cần newline để kết thúc câu lệnh); chỉ bỏ newline trong `(` `[`. Đã ghi SPEC mục 3 + comment Lexer.cs:108-112. Khi T2 mâu thuẫn → xem SPEC trước.
+
+## RUT KINH NGHIEM (UI/UX)
+- không áp dụng — backend
+
+## TU CHAM DIEM
+- diem tot: build/test xanh ngay lần 2 (sau khi sửa đúng test 8); ghi quyết định mâu thuẫn contract ra SPEC ngay thay vì giữ trong đầu; file-first có evidence lệnh thật (`BUILD_EXIT=0`, `TEST_EXIT=0`, 7 file Get-Item + size).
+- diem xau: test 8 viết nhầm source (quên `\n` sau `)`), tốn 1 vòng build. Nên vẽ chuỗi thử trước khi viết assertion.
+- CHUA VERIFY: chưa verify hành vi `;` SOL_SEMI ở parser tầng sau (lexer mới test phát DAU); chưa verify token `{`/`}` trong biểu thức mảng dict tương lai; chưa test format lỗi chuỗi chưa kết thúc / escape lạ.
+- SOI LAI: lần sau (T2) nếu gặp newline/semicolon, đọc kỹ SPEC mục 3-4 trước khi viết test; test lexer nên có thêm case `\r\n` (CRLF) tường minh.

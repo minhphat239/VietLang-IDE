@@ -1,0 +1,19 @@
+## TIEN DO
+- M2.5 HOÀN THÀNH — Golden tests + CHANGELOG + version v0.2
+- 96/96 tests PASS (92 cũ + 4 golden mới)
+- dotnet build: exit 0, 0 warnings
+- Demo bai_01.vl: output giống cũ
+
+## RUT KINH NGHIEM (quy trình)
+- Golden tests dùng cùng LexTest framework như existing tests, không thêm xunit
+- ChayFile helper cần gọi `interp.Run(program, fullPath, null, null)` để `_currentDir` đúng cho `khai_báo` — gọi `Run(program)` sẽ dùng CWD → import fail
+- File .vl golden phải deterministic (không nhập()), output exact match
+
+## RUT KINH NGHIEM (UI/UX)
+- (không có — task không liên quan UI)
+
+## TU CHAM DIEM
+- Điểm tốt: setup nhanh, follow đúng pattern có sẵn, test all pass first try (sau fix path)
+- Điểm xấu: lần đầu ChayFile dùng `Run(program)` sai → golden_module fail, phải sửa
+- CHƯA VERIFY: edge case import với absolute path (không test)
+- SOI LAI: nếu thêm golden test mới cho import, cần đảm bảo `Run(program, path, ...)` luôn được dùng

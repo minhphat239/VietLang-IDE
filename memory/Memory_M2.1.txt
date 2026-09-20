@@ -1,0 +1,20 @@
+## TIEN DO
+- M2.1 Dict: DONE (58/58 PASS, `dotnet build` exit 0)
+- Files sửa: Token.cs (+1 enum), Lexer.cs (+1 case), AST.cs (+DictLit, IndexAssignStmt), Parser.cs (+PhanTichDict, IndexAssignStmt), Interpreter.cs (+DictValue, DictMethodValue, ThucHienGanIndex, GoiDictMethod, dict support ở Eval/EvalGet/EvalIndex/ThucHienVoiTrong/Chantri/MoTaKieu/ChuoiHoa), Builtins.cs (độ_dài hỗ trợ dict), Program.cs (+TestDict)
+- Files tạo: tests/TestDict.cs (13 test cases), docs/SPEC_v0_1.md
+- CHƯA VERIFY: anonymous function (không thêm — test dùng named function thay thế)
+
+## RUT KINH NGHIEM (quy trình)
+- Disambiguate `{` (dict vs block): check `LaPatternDict()` (CHUOI/TEN + DAU_HAI_CHAM) trước khi parse — lookahead đơn giản 1 token, rollback nếu fail.
+- Method dispatch trên dict: dùng `DictMethodValue` (gộp dict + tên method) thay vì BuiltinValue — tránh need global registry riêng.
+- IndexAssignStmt tách riêng khỏi AssignStmt — interpreter xử lý dict/array index assignment khác nhau, không nhồi vào cùng switch.
+- Test_dict_ham_trong_dict: dùng named function thay vì anonymous (chưa hỗ trợ `hàm() { ... }` trong expression context — scope M2).
+
+## RUT KINH NGHIEM (UI/UX)
+- Không có UI trong milestone này.
+
+## TU CHAM DIEM
+- Điểm tốt: Dict đầy đủ 5 method, 13 test cases, spec ghi rõ. Disambiguate dict/block sạch, không phá parser hiện tại.
+- Điểm xấu: Test case 11 phải sửa vì thiếu anonymous function support — nên ghi rõ scope từ đầu.
+- CHƯA VERIFY: anonymous function trong dict value (test dùng workaround: named function).
+- SOI LAI: Lần sau khi thêm kiểu literal mới (dict/set/...), liệt kê feature phụ cần thiết (anonymous fn) ngay trong scope document để tránh sửa test giữa chừng.

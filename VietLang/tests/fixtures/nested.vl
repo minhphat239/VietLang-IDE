@@ -1,0 +1,5 @@
+khai_báo "math.vl"
+
+hàm vuông(n) {
+    trả_về nhân(n, n)
+}

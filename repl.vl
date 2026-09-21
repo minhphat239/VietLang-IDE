@@ -2,7 +2,7 @@
 # Chạy: vietlang repl.vl
 
 _history = []
-_REPL_VARS = ["_history", "_REPL_VARS", "hiển_thị_chào_mừng", "hiển_thị_trợ_giúp", "hiển_thị_lịch_sử", "xóa_state", "lưu_state", "restore_state", "lưu_history", "restore_history", "_la_repl_var"]
+_REPL_VARS = ["_history", "_REPL_VARS", "hiển_thị_chào_mừng", "hiển_thị_trợ_giúp", "hiển_thị_lịch_sử", "hiển_thị_lỗi", "xóa_state", "lưu_state", "restore_state", "lưu_history", "restore_history", "_la_repl_var"]
 
 hàm hiển_thị_chào_mừng() {
   xóa_màn_hình()
@@ -53,6 +53,34 @@ hàm hiển_thị_lịch_sử() {
 hàm xóa_state() {
   _history = []
   in_ra("Đã xóa lịch sử.")
+}
+
+hàm hiển_thị_lỗi(e, lenh) {
+  thong_bao = chuyển_chuỗi(e)
+  in_ra("")
+
+  so_dong = thay_the(thong_bao, ".*dòng ([0-9]+).*", "$1")
+
+  nếu so_dong != thong_bao {
+    in_mau("  ✗ " + thong_bao, "red")
+    in_mau("    -> Dòng " + so_dong, "yellow")
+    nếu lenh != rỗng và lenh != "" {
+      so = chuyển_số(so_dong)
+      con_lai = lenh
+      i = 0
+      trong_lúc i < so - 1 {
+        con_lai = thay_the(con_lai, "^[^\n]*\n?", "")
+        i = i + 1
+      }
+      dong_source = thay_the(con_lai, "^([^\n]*).*", "$1")
+      nếu dong_source != "" {
+        in_ra("    | " + dong_source)
+      }
+    }
+  } không_thì {
+    in_mau("  ✗ " + thong_bao, "red")
+  }
+  in_ra("")
 }
 
 hàm _la_repl_var(ten) {
@@ -136,6 +164,10 @@ hiển_thị_chào_mừng()
 trong_lúc đúng {
   in_mau(">>> ", "green")
   lệnh = nhập()
+  nếu lệnh == rỗng {
+    lưu_history()
+    thoát()
+  }
   nếu lệnh == "" {
     lưu_history()
     thoát()
@@ -191,6 +223,6 @@ trong_lúc đúng {
   thử {
     thực_thi(lệnh)
   } ngoại_lệ (e) {
-    in_mau("Lỗi: " + e, "red")
+    hiển_thị_lỗi(e, lệnh)
   }
 }

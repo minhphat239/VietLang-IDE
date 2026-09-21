@@ -286,7 +286,9 @@ public static class Builtins
         {
             var args = Environment.GetCommandLineArgs();
             var result = new List<object>();
-            for (int idx = 1; idx < args.Length; idx++)
+            // Skip program name (index 0) and script file path (index 1)
+            // User args start from index 2
+            for (int idx = 2; idx < args.Length; idx++)
                 result.Add(args[idx]);
             return result;
         }));

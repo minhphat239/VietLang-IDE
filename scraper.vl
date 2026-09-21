@@ -1,0 +1,97 @@
+# scraper.vl — Web Scraper cho VietLang
+# Su dung: vietlang scraper.vl <url> [output_file]
+
+# ─── Kiem tra tham so ────────────────────────────────────────
+tham_số = lấy_tham_số()
+độ_dài_ts = độ_dài(tham_số)
+
+nếu độ_dài_ts == 0 {
+  in_mau("Cach dung: vietlang scraper.vl <url> [output_file]", "yellow")
+  in_mau("Vi du:", "yellow")
+  in_mau("  vietlang scraper.vl https://example.com", "yellow")
+  in_mau("  vietlang scraper.vl https://example.com output.txt", "yellow")
+  thoát()
+}
+
+url = tham_số[0]
+file_output = "scraper_output.txt"
+nếu độ_dài_ts > 1 {
+  file_output = tham_số[1]
+}
+
+# ─── Fetch HTML ──────────────────────────────────────────────
+in_ra("Dang tai: " + url)
+bắt_đầu = bay_gio()
+
+thử {
+  html = lấy(url)
+} ngoại_lệ (e) {
+  in_mau("Loi khi tai: " + e, "red")
+  thoát()
+}
+
+kết_thúc = bay_gio()
+in_ra("Da tai xong: " + chuyển_chuỗi(độ_dài(html)) + " ky tu")
+
+# ─── Trich xuat noi dung ─────────────────────────────────────
+# Loai bo the HTML co ban
+noi_dung = ""
+trong_lenh = sai
+idx = 0
+độ_dài_html = độ_dài(html)
+
+trong_lúc idx < độ_dài_html {
+  ky_tu = html[idx]
+  
+  nếu ky_tu == "<" {
+    trong_lenh = sai
+  } không_thì {
+    nếu ky_tu == ">" {
+      trong_lenh = đúng
+    } không_thì {
+      nếu trong_lenh {
+        noi_dung = noi_dung + ky_tu
+      }
+    }
+  }
+  idx = idx + 1
+}
+
+# ─── Phan tich noi dung ──────────────────────────────────────
+từ_list = tách_từ(noi_dung)
+câu_list = tách_câu(noi_dung)
+độ_dài_từ = độ_dài(từ_list)
+độ_dài_câu = độ_dài(câu_list)
+
+# ─── Hien thi ket qua ────────────────────────────────────────
+in_ra("═══════════════════════════════════════════════════")
+in_ra("  KET QUA SCRAPE")
+in_ra("═══════════════════════════════════════════════════")
+in_ra("URL: " + url)
+in_ra("Thoi gian: " + bắt_đầu + " -> " + kết_thúc)
+in_ra("Do dai HTML: " + chuyển_chuỗi(độ_dài(html)) + " ky tu")
+in_ra("Do dai noi dung: " + chuyển_chuỗi(độ_dài(noi_dung)) + " ky tu")
+in_ra("So tu: " + chuyển_chuỗi(độ_dài_từ))
+in_ra("So cau: " + chuyển_chuỗi(độ_dài_câu))
+in_ra("═══════════════════════════════════════════════════")
+
+# ─── Luu vao file ─────────────────────────────────────────────
+noi_dung_file = "URL: " + url + "\n"
+noi_dung_file = noi_dung_file + "Thoi gian scrape: " + bắt_đầu + "\n"
+noi_dung_file = noi_dung_file + "Do dai HTML: " + chuyển_chuỗi(độ_dài(html)) + " ky tu\n"
+noi_dung_file = noi_dung_file + "So tu: " + chuyển_chuỗi(độ_dài_từ) + "\n"
+noi_dung_file = noi_dung_file + "So cau: " + chuyển_chuỗi(độ_dài_câu) + "\n"
+noi_dung_file = noi_dung_file + "\n--- NOI DUNG ---\n"
+noi_dung_file = noi_dung_file + noi_dung + "\n"
+
+thử {
+  ghi_file(file_output, noi_dung_file)
+  in_ra("Da luu vao: " + file_output)
+} ngoại_lệ (e) {
+  in_mau("Loi khi luu file: " + e, "red")
+}
+
+# │━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# VietLang Web Scraper v1.0
+# Su dung: vietlang scraper.vl <url> [output_file]
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,83 @@
+# test_scraper.vl — Test Web Scraper
+# Test cac chuc nang co ban cua scraper
+
+in_ra("=== TEST SCRAPER ===")
+
+# Test 1: HTML stripping
+html = "<html><body><h1>Hello</h1><p>World</p></body></html>"
+noi_dung = ""
+trong_lenh = sai
+idx = 0
+độ_dài_html = độ_dài(html)
+
+trong_lúc idx < độ_dài_html {
+  ky_tu = html[idx]
+  nếu ky_tu == "<" {
+    trong_lenh = sai
+  } không_thì {
+    nếu ky_tu == ">" {
+      trong_lenh = đúng
+    } không_thì {
+      nếu trong_lenh {
+        noi_dung = noi_dung + ky_tu
+      }
+    }
+  }
+  idx = idx + 1
+}
+
+nếu noi_dung != "HelloWorld" {
+  ném("FAIL: HTML stripping")
+}
+in_ra("PASS: HTML stripping")
+
+# Test 2: Word counting
+noi_dung2 = "Day la noi dung mau"
+tu_list = tách_từ(noi_dung2)
+nếu độ_dài(tu_list) != 5 {
+  ném("FAIL: Word counting")
+}
+in_ra("PASS: Word counting")
+
+# Test 3: Sentence counting
+noi_dung3 = "Cau thu nhat. Cau thu hai."
+cau_list = tách_câu(noi_dung3)
+nếu độ_dài(cau_list) != 2 {
+  ném("FAIL: Sentence counting")
+}
+in_ra("PASS: Sentence counting")
+
+# Test 4: File writing
+file_test = "test_scraper_output.txt"
+noi_dung_file = "Test content"
+thử {
+  ghi_file(file_test, noi_dung_file)
+  nếu tồn_tại(file_test) != đúng {
+    ném("FAIL: File writing")
+  }
+  xóa_file(file_test)
+  in_ra("PASS: File writing")
+} ngoại_lệ (e) {
+  ném("FAIL: File writing - " + e)
+}
+
+# Test 5: DateTime
+thoi_gian = bay_gio()
+nếu độ_dài(thoi_gian) < 10 {
+  ném("FAIL: DateTime")
+}
+in_ra("PASS: DateTime")
+
+# Test 6: HTTP (can internet)
+thử {
+  html = lấy("https://httpbin.org/get")
+  nếu độ_dài(html) > 0 {
+    in_ra("PASS: HTTP fetch")
+  } không_thì {
+    ném("FAIL: HTTP fetch - empty")
+  }
+} ngoại_lệ (e) {
+  in_mau("SKIP: HTTP fetch - " + e, "yellow")
+}
+
+in_ra("=== ALL TESTS PASSED ===")

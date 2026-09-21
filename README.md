@@ -122,7 +122,23 @@ VietLang/
     └── SPEC_v0_1.md    # đặc tả ngôn ngữ v0.1 (contract)
 ```
 
-## 8. Lộ trình
+## 8. Standard Libraries
+
+VietLang cung cấp các thư viện chuẩn sau:
+
+### Math Library
+`can_bac_hai`, `tuyet_doi`, `toi_da`, `toi_thieu`, `sin`, `cos`, `tan`, `log`, `log2`, `log10`, `lam_tron`, `lam_nguyen`, `lam_tron_len`, `so_nguyen`, `PI`, `E`
+
+### File System Library
+`doc_thu_muc`, `tao_thu_muc`, `xoa_file`, `sao_copy`, `di_tuong`, `kich_thuoc_file`, `la_thu_muc`, `la_file`
+
+### DateTime Library
+`bay_gio`, `ngay`, `gio`, `thoi_gian`, `cho`, `dem_nguoc`
+
+### HTTP Library
+`lay`, `gui`, `gui_chuoi`
+
+## 9. Lộ trình
 
 | Giai đoạn | Nội dung |
 |---|---|
@@ -132,7 +148,7 @@ VietLang/
 | **M4** | REPL, CLI hoàn chỉnh, packaging, extension cho editor |
 | **M5+** | mở rộng lên 100+ thư viện |
 
-## 9. Đóng góp
+## 10. Đóng góp
 
 - Bài tập gọn gàng, có thử nghiệm: mỗi tính năng mới đều có test đi kèm (`tests/`).
 - Ngôn ngữ v0.1 là **contract** trong `docs/SPEC_v0_1.md` — đổi hành vi ngôn ngữ phải sửa SPEC trước.

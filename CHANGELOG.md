@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [0.3.0] - 2026-09-21
+### Added
+- Math library: can_bac_hai, tuyet_doi, toi_da, toi_thieu, sin/cos/tan, log/log2/log10, lam_tron/lam_nguyen/lam_tron_len, so_nguyen, PI, E
+- File System library: doc_thu_muc, tao_thu_muc, xoa_file, sao_copy, di_tuong, kich_thuoc_file, la_thu_muc, la_file
+- DateTime library: bay_gio, ngay, gio, thoi_gian, cho, dem_nguoc
+- HTTP library: lay, gui, gui_chuoi
+- 35+ new self-tests (167 total)
+
 ## v0.2.0 — 20/09/2026
 
 ### Tính năng mới

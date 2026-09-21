@@ -105,6 +105,61 @@ Lệnh kết thúc    bằng NEWLINE hoặc `;` (tùy chọn). Khối lệnh n�
 | `đếm_từ(text)` | số từ |
 | `chuẩn_hóa_tìm_kiếm(text)` | bỏ dấu + lowercase + trim |
 
+## 6.5. Standard Libraries (v0.3.0)
+
+### Math Library
+
+| Tên | Nghĩa |
+|---|---|
+| `can_bac_hai(x)` | căn bậc hai |
+| `tuyet_doi(x)` | giá trị tuyệt đối |
+| `toi_da(a, b)` | giá trị lớn nhất |
+| `toi_thieu(a, b)` | giá trị nhỏ nhất |
+| `sin(x)` | sin (radian) |
+| `cos(x)` | cos (radian) |
+| `tan(x)` | tan (radian) |
+| `log(x)` | logarith tự nhiên |
+| `log2(x)` | logarith cơ sở 2 |
+| `log10(x)` | logarith cơ sở 10 |
+| `lam_tron(x)` | làm tròn đến số nguyên gần nhất |
+| `lam_nguyen(x)` | lấy phần nguyên (floor) |
+| `lam_tron_len(x)` | làm tròn lên (ceil) |
+| `so_nguyen(x)` | kiểm tra số nguyên |
+| `PI` | hằng số π (3.14159...) |
+| `E` | hằng số e (2.71828...) |
+
+### File System Library
+
+| Tên | Nghĩa |
+|---|---|
+| `doc_thu_muc(đường_dẫn)` | đọc danh sách file trong thư mục |
+| `tao_thu_muc(đường_dẫn)` | tạo thư mục mới |
+| `xoa_file(đường_dẫn)` | xóa file |
+| `sao_copy(nguồn, đích)` | sao chép file |
+| `di_tuong(đường_dẫn)` | lấy đường dẫn tuyệt đối |
+| `kich_thuoc_file(đường_dẫn)` | lấy kích thước file (bytes) |
+| `la_thu_muc(đường_dẫn)` | kiểm tra có phải thư mục |
+| `la_file(đường_dẫn)` | kiểm tra có phải file |
+
+### DateTime Library
+
+| Tên | Nghĩa |
+|---|---|
+| `bay_gio()` | lấy thời gian hiện tại (DateTime) |
+| `ngay()` | lấy ngày hiện tại |
+| `gio()` | lấy giờ hiện tại |
+| `thoi_gian()` | lấy timestamp (ms từ epoch) |
+| `cho(ms)` | chờ (sleep) trong ms milliseconds |
+| `dem_nguoc(giây)` | đếm ngược và hiển thị |
+
+### HTTP Library
+
+| Tên | Nghĩa |
+|---|---|
+| `lay(url)` | GET request, trả về chuỗi JSON |
+| `gui(url, dữ_liệu)` | POST request với dữ liệu |
+| `gui_chuoi(url, chuỗi)` | POST request với chuỗi (text/plain) |
+
 ## 7. Quy tắc lỗi
 
 Mọi thông báo lỗi bằng tiếng Việt, kèm số dòng (và cột nếu có).

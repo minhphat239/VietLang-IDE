@@ -95,6 +95,7 @@ internal static class Program
         tests.AddRange(TestEval.GetAll());
         tests.AddRange(TestMath.GetAll());
         tests.AddRange(TestGolden.GetAll());
+        tests.AddRange(StdlibLoader.LayTatCaTest());
 
         int pass = 0;
         foreach (var t in tests)

@@ -166,6 +166,15 @@ public sealed class BuiltinValue
     public override string ToString() => $"<hàm {Ten}>";
 }
 
+/// <summary>Widget WinForms — giá trị bọc Control để truyền trong .vl.</summary>
+public sealed class WidgetValue
+{
+    public object Control { get; }
+    public string Ten { get; }
+    public WidgetValue(object control, string ten = "widget") { Control = control; Ten = ten; }
+    public override string ToString() => $"<widget {Ten}>";
+}
+
 /// <summary>Tree-walking interpreter cho VietLang v0.2.</summary>
 public sealed class Interpreter
 {
@@ -233,6 +242,7 @@ public sealed class Interpreter
     {
         var global = new PhamVi();
         Builtins.DangKy(global);
+        StdlibLoader.DangKyTatCa(global);
         _currentDir = Directory.GetCurrentDirectory();
         _visitedPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         try
@@ -256,6 +266,7 @@ public sealed class Interpreter
         _visitedPaths = visited ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var env = sharedGlobal ?? new PhamVi();
         if (sharedGlobal == null) Builtins.DangKy(env);
+        StdlibLoader.DangKyTatCa(env);
         ThucHien(ListMoi(program.Stmts), env);
     }
 

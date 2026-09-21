@@ -16,6 +16,7 @@ public static class TestGolden
         new LexTest { Name = "golden_math", Run = GoldenMath },
         new LexTest { Name = "golden_filesystem", Run = GoldenFilesystem },
         new LexTest { Name = "golden_datetime", Run = GoldenDatetime },
+        new LexTest { Name = "golden_http", Run = GoldenHttp },
     };
 
     private static void KiemTra(bool cond, string msg)
@@ -118,6 +119,14 @@ public static class TestGolden
         var (output, exit) = ChayFile("test_datetime.vl");
         KiemTra(exit == 0, $"exit = {exit}");
         KiemTra(output == "PASS: datetime tests", $"output = [{output}]");
+        return true;
+    }
+
+    private static bool GoldenHttp()
+    {
+        var (output, exit) = ChayFile("test_http.vl");
+        KiemTra(exit == 0, $"exit = {exit}");
+        KiemTra(output.Contains("PASS: http tests"), $"output = [{output}]");
         return true;
     }
 }

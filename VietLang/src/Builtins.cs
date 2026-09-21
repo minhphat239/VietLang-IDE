@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -13,6 +14,8 @@ namespace VietLang;
     /// <summary>Đăng ký tất cả builtin vào môi trường toàn cục.</summary>
 public static class Builtins
 {
+    private static readonly HttpClient _http = new HttpClient() { Timeout = TimeSpan.FromSeconds(10) };
+
     private static RuntimeError Loi(int dong, string chiTiet)
         => new RuntimeError($"Lỗi thực thi dòng {dong}: {chiTiet}");
 
@@ -604,6 +607,265 @@ public static class Builtins
             Thread.Sleep(ms);
             return "hết giờ";
         }));
+
+        // ─── HTTP builtins ─────────────────────────────────────────
+
+        global.GanDay("lấy", new BuiltinValue("lấy", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("lấy", 1, a.Count, d);
+            if (a[0] is not string url)
+                throw Loi(d, $"lấy cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            try
+            {
+                var response = _http.GetAsync(url).GetAwaiter().GetResult();
+                response.EnsureSuccessStatusCode();
+                return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"lấy thất bại: {ex.Message}");
+            }
+        }));
+
+        global.GanDay("gửi", new BuiltinValue("gửi", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("gửi", 2, a.Count, d);
+            if (a[0] is not string url)
+                throw Loi(d, $"gửi tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            try
+            {
+                var content = new StringContent(
+                    Interpreter.ChuoiHoa(a[1]),
+                    System.Text.Encoding.UTF8,
+                    "application/json");
+                var response = _http.PostAsync(url, content).GetAwaiter().GetResult();
+                response.EnsureSuccessStatusCode();
+                return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"gửi thất bại: {ex.Message}");
+            }
+        }));
+
+        global.GanDay("gửi_chuỗi", new BuiltinValue("gửi_chuỗi", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("gửi_chuỗi", 3, a.Count, d);
+            if (a[0] is not string url)
+                throw Loi(d, $"gửi_chuỗi tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            if (a[2] is not string contentType)
+                throw Loi(d, $"gửi_chuỗi tham số 3 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[2])}");
+            try
+            {
+                var content = new StringContent(
+                    Interpreter.ChuoiHoa(a[1]),
+                    System.Text.Encoding.UTF8,
+                    contentType);
+                var response = _http.PostAsync(url, content).GetAwaiter().GetResult();
+                response.EnsureSuccessStatusCode();
+                return response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
+            }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"gửi_chuỗi thất bại: {ex.Message}");
+            }
+        }));
+
+        // ─── GUI: tạo_cửa_sổ ─────────────────────────────────────
+        global.GanDay("tạo_cửa_sổ", new BuiltinValue("tạo_cửa_sổ", (i, a, d) =>
+        {
+            _guiInterpreter = i;
+            EnsureForm();
+            if (a.Count >= 1) _form.Text = Interpreter.ChuoiHoa(a[0]);
+            if (a.Count >= 2 && a[0] is double w && a[1] is double h)
+                _form.Size = new System.Drawing.Size((int)w, (int)h);
+            if (a.Count >= 3 && a[0] is string title && a[1] is double ww && a[2] is double hh)
+            {
+                _form.Text = title;
+                _form.Size = new System.Drawing.Size((int)ww, (int)hh);
+            }
+            return null;
+        }));
+
+        // ─── GUI: tạo_nút ─────────────────────────────────────────
+        global.GanDay("tạo_nút", new BuiltinValue("tạo_nút", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("tạo_nút", 1, a.Count, d);
+            EnsureForm();
+            var btn = new System.Windows.Forms.Button();
+            btn.Text = Interpreter.ChuoiHoa(a[0]);
+            btn.AutoSize = true;
+            btn.Margin = new System.Windows.Forms.Padding(5);
+            // Store reference for callback
+            var interp = _guiInterpreter;
+            btn.Click += (s, e) =>
+            {
+                if (interp != null)
+                {
+                    try { interp.ThucThiChuoi("nhấn_nút()", interp.CurrentEnv); }
+                    catch { /* ignore callback errors */ }
+                }
+            };
+            _panel.Controls.Add(btn);
+            return new WidgetValue(btn, "nút");
+        }));
+
+        // ─── GUI: tạo_ô_văn_bản ───────────────────────────────────
+        global.GanDay("tạo_ô_văn_bản", new BuiltinValue("tạo_ô_văn_bản", (i, a, d) =>
+        {
+            EnsureForm();
+            var txt = new System.Windows.Forms.TextBox();
+            txt.Width = 200;
+            txt.Margin = new System.Windows.Forms.Padding(5);
+            if (a.Count >= 1) txt.Text = Interpreter.ChuoiHoa(a[0]);
+            _panel.Controls.Add(txt);
+            return new WidgetValue(txt, "ô_văn_bản");
+        }));
+
+        // ─── GUI: tạo_nhãn ────────────────────────────────────────
+        global.GanDay("tạo_nhãn", new BuiltinValue("tạo_nhãn", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("tạo_nhãn", 1, a.Count, d);
+            EnsureForm();
+            var lbl = new System.Windows.Forms.Label();
+            lbl.Text = Interpreter.ChuoiHoa(a[0]);
+            lbl.AutoSize = true;
+            lbl.Margin = new System.Windows.Forms.Padding(5);
+            _panel.Controls.Add(lbl);
+            return new WidgetValue(lbl, "nhãn");
+        }));
+
+        // ─── GUI: tạo_dòng_chữ ────────────────────────────────────
+        global.GanDay("tạo_dòng_chữ", new BuiltinValue("tạo_dòng_chữ", (i, a, d) =>
+        {
+            EnsureForm();
+            var rtb = new System.Windows.Forms.RichTextBox();
+            rtb.Width = 300;
+            rtb.Height = 100;
+            rtb.Margin = new System.Windows.Forms.Padding(5);
+            if (a.Count >= 1) rtb.Text = Interpreter.ChuoiHoa(a[0]);
+            _panel.Controls.Add(rtb);
+            return new WidgetValue(rtb, "dòng_chữ");
+        }));
+
+        // ─── GUI: thêm ────────────────────────────────────────────
+        global.GanDay("thêm_widget", new BuiltinValue("thêm_widget", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("thêm_widget", 1, a.Count, d);
+            EnsureForm();
+            var ctrl = GetWidget(a[0]);
+            _panel.Controls.Add(ctrl);
+            return null;
+        }));
+
+        // ─── GUI: chạy ────────────────────────────────────────────
+        global.GanDay("chạy", new BuiltinValue("chạy", (i, a, d) =>
+        {
+            EnsureForm();
+            _guiInterpreter = i;
+            _form.FormClosing += (s, e) => { _form = null; };
+            System.Windows.Forms.Application.Run(_form);
+            _form = null;
+            return null;
+        }));
+
+        // ─── GUI: đặt_title ───────────────────────────────────────
+        global.GanDay("đặt_title", new BuiltinValue("đặt_title", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_title", 1, a.Count, d);
+            EnsureForm();
+            _form.Text = Interpreter.ChuoiHoa(a[0]);
+            return null;
+        }));
+
+        // ─── GUI: đặt_kích_thước ──────────────────────────────────
+        global.GanDay("đặt_kích_thước", new BuiltinValue("đặt_kích_thước", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_kích_thước", 2, a.Count, d);
+            EnsureForm();
+            if (a[0] is double w && a[1] is double h)
+                _form.Size = new System.Drawing.Size((int)w, (int)h);
+            return null;
+        }));
+
+        // ─── GUI: lấy_văn_bản ─────────────────────────────────────
+        global.GanDay("lấy_văn_bản", new BuiltinValue("lấy_văn_bản", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("lấy_văn_bản", 1, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (ctrl is System.Windows.Forms.TextBox tb) return tb.Text;
+            if (ctrl is System.Windows.Forms.RichTextBox rtb) return rtb.Text;
+            throw Loi(d, "lấy_văn_bản chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
+        }));
+
+        // ─── GUI: đặt_văn_bản ─────────────────────────────────────
+        global.GanDay("đặt_văn_bản", new BuiltinValue("đặt_văn_bản", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_văn_bản", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            var text = Interpreter.ChuoiHoa(a[1]);
+            if (ctrl is System.Windows.Forms.TextBox tb) { tb.Text = text; return null; }
+            if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.Text = text; return null; }
+            if (ctrl is System.Windows.Forms.Label lbl) { lbl.Text = text; return null; }
+            if (ctrl is System.Windows.Forms.Button btn) { btn.Text = text; return null; }
+            throw Loi(d, "đặt_văn_bản không hỗ trợ kiểu widget này");
+        }));
+
+        // ─── GUI: thêm_dòng ────────────────────────────────────────
+        global.GanDay("thêm_dòng", new BuiltinValue("thêm_dòng", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("thêm_dòng", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            var text = Interpreter.ChuoiHoa(a[1]);
+            if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.AppendText(text + "\n"); return null; }
+            throw Loi(d, "thêm_dòng chỉ áp dụng cho dòng_chữ");
+        }));
+
+        // ─── GUI: xóa_trống ───────────────────────────────────────
+        global.GanDay("xóa_trống", new BuiltinValue("xóa_trống", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("xóa_trống", 1, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (ctrl is System.Windows.Forms.TextBox tb) { tb.Text = ""; return null; }
+            if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.Text = ""; return null; }
+            throw Loi(d, "xóa_trống chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
+        }));
+
+        // ─── GUI: đóng ─────────────────────────────────────────────
+        global.GanDay("đóng", new BuiltinValue("đóng", (i, a, d) =>
+        {
+            if (_form != null)
+            {
+                _form.Invoke(new Action(() => _form.Close()));
+            }
+            return null;
+        }));
+    }
+
+    // ─── GUI builtins (WinForms) ──────────────────────────────────────
+
+    private static System.Windows.Forms.Form _form;
+    private static System.Windows.Forms.FlowLayoutPanel _panel;
+    private static Interpreter _guiInterpreter;
+
+    private static System.Windows.Forms.Control GetWidget(object obj)
+    {
+        if (obj is WidgetValue wv && wv.Control is System.Windows.Forms.Control ctrl)
+            return ctrl;
+        throw new RuntimeError($"Widget không hợp lệ: {Interpreter.ChuoiHoa(obj)}");
+    }
+
+    private static void EnsureForm()
+    {
+        if (_form == null)
+        {
+            _form = new System.Windows.Forms.Form();
+            _panel = new System.Windows.Forms.FlowLayoutPanel();
+            _panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            _panel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            _panel.AutoScroll = true;
+            _form.Controls.Add(_panel);
+        }
     }
 
     // ─── JSON helpers ───────────────────────────────────────────────

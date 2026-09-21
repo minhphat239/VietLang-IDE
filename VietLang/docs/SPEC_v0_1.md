@@ -184,6 +184,9 @@ t.kích_thước()    # số key (double)
 | `thoi_gian()` | Trả về Unix timestamp (seconds since 1970) |
 | `cho(ms)` | Thread.Sleep(ms), trả về "đã cho xong" |
 | `dem_nguoc(ms)` | Countdown blocking (ms), trả về "hết giờ" |
+| `lấy(url)` | GET request, trả về response body (string) |
+| `gửi(url, data)` | POST JSON request, trả về response body (string) |
+| `gửi_chuỗi(url, data, content_type)` | POST custom content-type request, trả về response body (string) |
 
 ### Hằng số toán học
 | Hằng | Giá trị |

@@ -36,7 +36,7 @@
 - **System:** chạy_lệnh, lấy_tham_số, in_mau, xóa_màn_hình
 - **Session:** lấy_tất_cả_biến, gán_biến
 
-### Feedback đã gửi (7 files)
+### Feedback đã gửi (8 files)
 - `ENGINE_BUGS.md` — 9 lỗi engine
 - `ENGINE_SESSION_CHANGES.md` — Thay đổi engine cho session
 - `REPL_BUILTINS.md` — Thiếu builtins (đã fix)
@@ -44,6 +44,7 @@
 - `REPL_THUC_THI.md` — Thiếu thực_thi() (đã fix)
 - `SCRIPT_RUNNER_BUGS.md` — Lỗi script runner
 - `SCRIPT_RUNNER_NO_ARGS.md` — No-args timeout
+- `THUCTHI_RETURNSIGNAL_LEAK.md` — ReturnSignal leak trong ThucThiChuoi
 
 ## 3. Đang làm / Dự định
 
@@ -52,15 +53,15 @@
 - [ ] IDLE.9: Test toàn diện + documentation
 
 ### Milestone 5: Nâng cao ⏳
-- [ ] Cross-platform (xóa `del`, dùng `xóa_file`)
+- [ ] Cross-platform (thêm builtin `xóa_file()`)
 - [ ] Autocomplete (gợi ý từ khóa, builtin)
 - [ ] Syntax highlighting khi chạy file
 - [ ] Multi-line input trong REPL
 
-## 4. Lỗi chưa fix
-- `thực_thi()` infinite recursion khi gọi từ .vl (builtins test PASS nhưng gọi từ .vl crash)
-- `script_runner.vl` no-args timeout
-- `chạy_lệnh("del ...")` không cross-platform
+## 4. Lỗi đã investigate
+- `thực_thi()` — KHÔNG có infinite recursion. Bug thật: ReturnSignal leak từ ThucThiChuoi (Interpreter.cs:278-293). Builtins test PASS, .vl test cũng PASS.
+- `script_runner.vl` no-args timeout — known parser bug
+- `chạy_lệnh("del ...")` — cần builtin `xóa_file()` cho cross-platform
 
 ## 5. Cách chạy
 ```bash

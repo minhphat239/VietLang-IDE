@@ -13,6 +13,9 @@ public static class TestGolden
         new LexTest { Name = "golden_dict", Run = GoldenDict },
         new LexTest { Name = "golden_exception", Run = GoldenException },
         new LexTest { Name = "golden_module", Run = GoldenModule },
+        new LexTest { Name = "golden_math", Run = GoldenMath },
+        new LexTest { Name = "golden_filesystem", Run = GoldenFilesystem },
+        new LexTest { Name = "golden_datetime", Run = GoldenDatetime },
     };
 
     private static void KiemTra(bool cond, string msg)
@@ -91,6 +94,30 @@ public static class TestGolden
         var (output, exit) = ChayFile("golden_module.vl");
         KiemTra(exit == 0, $"exit = {exit}");
         KiemTra(output == "Xin chào VietLang", $"output = [{output}]");
+        return true;
+    }
+
+    private static bool GoldenMath()
+    {
+        var (output, exit) = ChayFile("test_math.vl");
+        KiemTra(exit == 0, $"exit = {exit}");
+        KiemTra(output == "PASS: all math tests", $"output = [{output}]");
+        return true;
+    }
+
+    private static bool GoldenFilesystem()
+    {
+        var (output, exit) = ChayFile("test_filesystem.vl");
+        KiemTra(exit == 0, $"exit = {exit}");
+        KiemTra(output == "PASS: filesystem tests", $"output = [{output}]");
+        return true;
+    }
+
+    private static bool GoldenDatetime()
+    {
+        var (output, exit) = ChayFile("test_datetime.vl");
+        KiemTra(exit == 0, $"exit = {exit}");
+        KiemTra(output == "PASS: datetime tests", $"output = [{output}]");
         return true;
     }
 }

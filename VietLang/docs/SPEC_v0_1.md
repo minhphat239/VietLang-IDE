@@ -149,6 +149,14 @@ t.kích_thước()    # số key (double)
 | `đọc_file(path)` | Đọc toàn bộ file UTF-8. File không tồn tại → RuntimeError |
 | `ghi_file(path, nội dung)` | Ghi string ra file UTF-8 (ghi đè). Trả nội dung để chain |
 | `tồn_tại(path)` | Kiểm tra file/thư mục tồn tại. Trả `đúng`/`sai` |
+| `đọc_thu_muc(path)` | Liệt kê các file/thư mục trong thư mục. Trả mảng tên. |
+| `tạo_thu_muc(path)` | Tạo thư mục (recursive). Trả `"đã tạo"` hoặc lỗi. |
+| `xóa_file(path)` | Xóa file hoặc thư mục trống. Trả `"đã xóa"` hoặc lỗi. |
+| `sao_copy(src, dst)` | Sao chép file (ghi đè nếu tồn tại). Trả `"đã sao chép"` hoặc lỗi. |
+| `đi_tường(path)` | Resolve đường dẫn tuyệt đối. Trả chuỗi. |
+| `kích_thước_file(path)` | Kích thước file (bytes). Trả số. |
+| `là_thu_muc(path)` | Kiểm tra có phải thư mục. Trả `đúng`/`sai`. |
+| `là_file(path)` | Kiểm tra có phải file. Trả `đúng`/`sai`. |
 | `json_phân_tách(text)` | Parse JSON string thành dict/array VietLang |
 | `json_gộp(object)` | Serialize dict/array thành JSON string |
 | `chạy_lệnh(cmd)` | Chạy lệnh system qua cmd.exe /c, trả stdout (hoặc stderr nếu fail) |
@@ -170,6 +178,12 @@ t.kích_thước()    # số key (double)
 | `làm_nguyên(x)` | Làm tròn xuống (floor) |
 | `làm_tròn_lên(x)` | Làm tròn lên (ceil) |
 | `so_nguyen(x)` | Kiểm tra có phải số nguyên (trả `đúng`/`sai`) |
+| `bay_gio()` | Trả về timestamp ISO 8601 (ví dụ: "2026-09-21T14:30:00") |
+| `ngay()` | Trả về date string (ví dụ: "2026-09-21") |
+| `gio()` | Trả về time string (ví dụ: "14:30:00") |
+| `thoi_gian()` | Trả về Unix timestamp (seconds since 1970) |
+| `cho(ms)` | Thread.Sleep(ms), trả về "đã cho xong" |
+| `dem_nguoc(ms)` | Countdown blocking (ms), trả về "hết giờ" |
 
 ### Hằng số toán học
 | Hằng | Giá trị |

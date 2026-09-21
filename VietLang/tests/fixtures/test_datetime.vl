@@ -1,0 +1,34 @@
+# test_datetime.vl — DateTime library golden test
+
+# 1. bay_gio() tra ve ISO 8601 format (chua "T")
+bg = bay_gio()
+nếu bg == "" { ném("FAIL: bay_gio() tra ve rong") }
+nếu không bg.chứa("T") { ném("FAIL: bay_gio() khong chua T") }
+
+# 2. ngay() tra ve date format (chua "-")
+ng = ngay()
+nếu ng == "" { ném("FAIL: ngay() tra ve rong") }
+nếu không ng.chứa("-") { ném("FAIL: ngay() khong chua -") }
+
+# 3. gio() tra ve time format (chua ":")
+g = gio()
+nếu g == "" { ném("FAIL: gio() tra ve rong") }
+nếu không g.chứa(":") { ném("FAIL: gio() khong chua :") }
+
+# 4. thoi_gian() > 0
+tg = thoi_gian()
+nếu tg <= 0 { ném("FAIL: thoi_gian() <= 0") }
+
+# 5. cho(100) tra ve "da cho xong"
+kq = cho(100)
+nếu kq != "đã cho xong" { ném("FAIL: cho(100)") }
+
+# 6. thoi_gian() >= 1757000000 (sau 2025)
+tg2 = thoi_gian()
+nếu tg2 < 1757000000 { ném("FAIL: thoi_gian() < 1757000000") }
+
+# 7. dem_nguoc(100) tra ve "het gio"
+dn = dem_nguoc(100)
+nếu dn != "hết giờ" { ném("FAIL: dem_nguoc(100)") }
+
+in_ra("PASS: datetime tests")

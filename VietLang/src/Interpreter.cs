@@ -288,6 +288,9 @@ public sealed class Interpreter
             ThucHienCauLenh(last, env);
             return null;
         }
+        catch (ReturnSignal r) { return r.Value; }
+        catch (BreakSignal) { return null; }
+        catch (ContinueSignal) { return null; }
         catch (LexError e) { return "lỗi cú pháp: " + e.Message; }
         catch (ParseError e) { return "lỗi cú pháp: " + e.Message; }
         catch (RuntimeError e) { return e.Message; }

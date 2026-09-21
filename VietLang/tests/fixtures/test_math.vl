@@ -1,0 +1,44 @@
+# test_math.vl — Math library golden test
+
+# 1. căn_bac_hai
+nếu căn_bac_hai(9) != 3 { ném("FAIL: căn_bac_hai(9)") }
+
+# 2. tuyệt_đối
+nếu tuyệt_đối(-5) != 5 { ném("FAIL: tuyệt_đối(-5)") }
+
+# 3. tối_đa
+nếu tối_đa(3, 7) != 7 { ném("FAIL: tối_đa(3,7)") }
+
+# 4. tối_thiểu
+nếu tối_thiểu(3, 7) != 3 { ném("FAIL: tối_thiểu(3,7)") }
+
+# 5. sin(0) == 0
+nếu sin(0) != 0 { ném("FAIL: sin(0)") }
+
+# 6. cos(0) == 1
+nếu cos(0) != 1 { ném("FAIL: cos(0)") }
+
+# 7. log(E) == 1
+nếu log(E) != 1 { ném("FAIL: log(E)") }
+
+# 8. log2(8) == 3
+nếu log2(8) != 3 { ném("FAIL: log2(8)") }
+
+# 9. log10(100) == 2
+nếu log10(100) != 2 { ném("FAIL: log10(100)") }
+
+# 10. làm_tròn(1.5) == 2
+nếu làm_tròn(1.5) != 2 { ném("FAIL: làm_tròn(1.5)") }
+
+# 11. làm_nguyên(1.7) == 1
+nếu làm_nguyên(1.7) != 1 { ném("FAIL: làm_nguyên(1.7)") }
+
+# 12. so_nguyen
+nếu so_nguyen(5) != đúng { ném("FAIL: so_nguyen(5)") }
+nếu so_nguyen(1.5) != sai { ném("FAIL: so_nguyen(1.5)") }
+
+# 13. PI range
+nếu PI <= 3.14 { ném("FAIL: PI too small") }
+nếu PI >= 3.15 { ném("FAIL: PI too large") }
+
+in_ra("PASS: all math tests")

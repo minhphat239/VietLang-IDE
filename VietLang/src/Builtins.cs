@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace VietLang;
 
@@ -231,6 +232,120 @@ public static class Builtins
             return File.Exists(path) || Directory.Exists(path);
         }));
 
+        // ─── File System builtins ──────────────────────────────────
+
+        global.GanDay("đọc_thu_muc", new BuiltinValue("đọc_thu_muc", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đọc_thu_muc", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"đọc_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            if (!Directory.Exists(path))
+                throw Loi(d, $"không tìm thấy thư mục '{path}'");
+            var result = new List<object>();
+            foreach (var entry in Directory.GetFileSystemEntries(path))
+                result.Add(Path.GetFileName(entry));
+            return result;
+        }));
+
+        global.GanDay("tạo_thu_muc", new BuiltinValue("tạo_thu_muc", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("tạo_thu_muc", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"tạo_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            try
+            {
+                Directory.CreateDirectory(path);
+                return "đã tạo";
+            }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"tạo_thu_muc thất bại: {ex.Message}");
+            }
+        }));
+
+        global.GanDay("xóa_file", new BuiltinValue("xóa_file", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("xóa_file", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"xóa_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            try
+            {
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                    return "đã xóa";
+                }
+                if (Directory.Exists(path))
+                {
+                    Directory.Delete(path);
+                    return "đã xóa";
+                }
+                throw Loi(d, $"không tìm thấy '{path}'");
+            }
+            catch (RuntimeError) { throw; }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"xóa_file thất bại: {ex.Message}");
+            }
+        }));
+
+        global.GanDay("sao_copy", new BuiltinValue("sao_copy", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("sao_copy", 2, a.Count, d);
+            if (a[0] is not string src)
+                throw Loi(d, $"sao_copy tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            if (a[1] is not string dst)
+                throw Loi(d, $"sao_copy tham số 2 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
+            try
+            {
+                if (File.Exists(src))
+                {
+                    File.Copy(src, dst, true);
+                    return "đã sao chép";
+                }
+                throw Loi(d, $"không tìm thấy tệp nguồn '{src}'");
+            }
+            catch (RuntimeError) { throw; }
+            catch (Exception ex)
+            {
+                throw Loi(d, $"sao_copy thất bại: {ex.Message}");
+            }
+        }));
+
+        global.GanDay("đi_tường", new BuiltinValue("đi_tường", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đi_tường", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"đi_tường cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            return Path.GetFullPath(path);
+        }));
+
+        global.GanDay("kích_thước_file", new BuiltinValue("kích_thước_file", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("kích_thước_file", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"kích_thước_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            if (!File.Exists(path))
+                throw Loi(d, $"không tìm thấy tệp '{path}'");
+            return (double)new FileInfo(path).Length;
+        }));
+
+        global.GanDay("là_thu_muc", new BuiltinValue("là_thu_muc", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("là_thu_muc", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"là_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            return Directory.Exists(path);
+        }));
+
+        global.GanDay("là_file", new BuiltinValue("là_file", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("là_file", 1, a.Count, d);
+            if (a[0] is not string path)
+                throw Loi(d, $"là_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+            return File.Exists(path);
+        }));
+
         global.GanDay("json_phân_tách", new BuiltinValue("json_phân_tách", (i, a, d) =>
         {
             YeucauSoLuongThamSo("json_phân_tách", 1, a.Count, d);
@@ -447,6 +562,48 @@ public static class Builtins
 
         global.GanDay("PI", Math.PI);
         global.GanDay("E", Math.E);
+
+        // ─── DateTime library builtins ──────────────────────────
+
+        global.GanDay("bay_gio", new BuiltinValue("bay_gio", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("bay_gio", 0, a.Count, d);
+            return DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss");
+        }));
+
+        global.GanDay("ngay", new BuiltinValue("ngay", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("ngay", 0, a.Count, d);
+            return DateTime.Now.ToString("yyyy-MM-dd");
+        }));
+
+        global.GanDay("gio", new BuiltinValue("gio", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("gio", 0, a.Count, d);
+            return DateTime.Now.ToString("HH:mm:ss");
+        }));
+
+        global.GanDay("thoi_gian", new BuiltinValue("thoi_gian", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("thoi_gian", 0, a.Count, d);
+            return (double)DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        }));
+
+        global.GanDay("cho", new BuiltinValue("cho", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("cho", 1, a.Count, d);
+            int ms = Convert.ToInt32(a[0]);
+            Thread.Sleep(ms);
+            return "đã cho xong";
+        }));
+
+        global.GanDay("dem_nguoc", new BuiltinValue("dem_nguoc", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("dem_nguoc", 1, a.Count, d);
+            int ms = Convert.ToInt32(a[0]);
+            Thread.Sleep(ms);
+            return "hết giờ";
+        }));
     }
 
     // ─── JSON helpers ───────────────────────────────────────────────

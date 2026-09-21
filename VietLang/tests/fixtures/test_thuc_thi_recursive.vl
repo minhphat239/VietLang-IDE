@@ -1,0 +1,7 @@
+﻿hàm dem(n) {
+    nếu (n <= 0) {
+        trả_về 0
+    }
+    trả_về n + thực_thi("dem(" + chuyển_chuỗi(n - 1) + ") - 1")
+}
+in_ra(dem(3))

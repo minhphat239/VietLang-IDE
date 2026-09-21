@@ -1,0 +1,4 @@
+﻿x = 5
+in_ra(thực_thi("x + 1"))
+thực_thi("hàm f() { trả_về 42 }")
+in_ra(thực_thi("f()"))

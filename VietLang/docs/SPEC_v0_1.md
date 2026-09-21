@@ -156,6 +156,26 @@ t.kích_thước()    # số key (double)
 | `lấy_tham_số()` | Trả mảng args từ command line (bỏ tên exe) |
 | `in_mau(text, mau)` | In text với ANSI color: red, green, yellow, blue, magenta, cyan, white, reset |
 | `xóa_màn_hình()` | Xóa màn hình console (ANSI clear screen + cursor home) |
+| `căn_bac_hai(x)` | Căn bậc hai (sqrt) |
+| `tuyệt_đối(x)` | Giá trị tuyệt đối (abs) |
+| `tối_đa(a, b)` | Giá trị lớn nhất (max), 1–2 tham số |
+| `tối_thiểu(a, b)` | Giá trị nhỏ nhất (min), 1–2 tham số |
+| `sin(x)` | Sinus (radian) |
+| `cos(x)` | Cosinus (radian) |
+| `tan(x)` | Tangent (radian) |
+| `log(x)` | Logarit tự nhiên |
+| `log2(x)` | Logarit cơ số 2 |
+| `log10(x)` | Logarit cơ số 10 |
+| `làm_tròn(x)` | Làm tròn về số nguyên gần nhất |
+| `làm_nguyên(x)` | Làm tròn xuống (floor) |
+| `làm_tròn_lên(x)` | Làm tròn lên (ceil) |
+| `so_nguyen(x)` | Kiểm tra có phải số nguyên (trả `đúng`/`sai`) |
+
+### Hằng số toán học
+| Hằng | Giá trị |
+|------|---------|
+| `PI` | 3.14159265358979... |
+| `E` | 2.71828182845904... |
 
 ## §5 Exception handling
 

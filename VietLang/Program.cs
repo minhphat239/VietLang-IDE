@@ -93,6 +93,7 @@ internal static class Program
         tests.AddRange(TestReplBuiltins.GetAll());
         tests.AddRange(TestSessionBuiltins.GetAll());
         tests.AddRange(TestEval.GetAll());
+        tests.AddRange(TestMath.GetAll());
         tests.AddRange(TestGolden.GetAll());
 
         int pass = 0;

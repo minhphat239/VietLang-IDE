@@ -349,6 +349,104 @@ public static class Builtins
             i.CurrentEnv.Gan(ten, a[1]);
             return null;
         }));
+
+        // ─── Math library builtins ────────────────────────────────
+
+        global.GanDay("căn_bac_hai", new BuiltinValue("căn_bac_hai", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("căn_bac_hai", 1, a.Count, d);
+            return Math.Sqrt(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("tuyệt_đối", new BuiltinValue("tuyệt_đối", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("tuyệt_đối", 1, a.Count, d);
+            return Math.Abs(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("tối_đa", new BuiltinValue("tối_đa", (i, a, d) =>
+        {
+            if (a.Count < 1 || a.Count > 2)
+                throw Loi(d, $"hàm 'tối_đa' cần 1 hoặc 2 tham số, nhận {a.Count}");
+            double result = Convert.ToDouble(a[0]);
+            for (int idx = 1; idx < a.Count; idx++)
+                result = Math.Max(result, Convert.ToDouble(a[idx]));
+            return result;
+        }));
+
+        global.GanDay("tối_thiểu", new BuiltinValue("tối_thiểu", (i, a, d) =>
+        {
+            if (a.Count < 1 || a.Count > 2)
+                throw Loi(d, $"hàm 'tối_thiểu' cần 1 hoặc 2 tham số, nhận {a.Count}");
+            double result = Convert.ToDouble(a[0]);
+            for (int idx = 1; idx < a.Count; idx++)
+                result = Math.Min(result, Convert.ToDouble(a[idx]));
+            return result;
+        }));
+
+        global.GanDay("sin", new BuiltinValue("sin", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("sin", 1, a.Count, d);
+            return Math.Sin(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("cos", new BuiltinValue("cos", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("cos", 1, a.Count, d);
+            return Math.Cos(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("tan", new BuiltinValue("tan", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("tan", 1, a.Count, d);
+            return Math.Tan(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("log", new BuiltinValue("log", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("log", 1, a.Count, d);
+            return Math.Log(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("log2", new BuiltinValue("log2", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("log2", 1, a.Count, d);
+            return Math.Log2(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("log10", new BuiltinValue("log10", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("log10", 1, a.Count, d);
+            return Math.Log10(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("làm_tròn", new BuiltinValue("làm_tròn", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("làm_tròn", 1, a.Count, d);
+            return (double)Math.Round(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("làm_nguyên", new BuiltinValue("làm_nguyên", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("làm_nguyên", 1, a.Count, d);
+            return (double)Math.Floor(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("làm_tròn_lên", new BuiltinValue("làm_tròn_lên", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("làm_tròn_lên", 1, a.Count, d);
+            return (double)Math.Ceiling(Convert.ToDouble(a[0]));
+        }));
+
+        global.GanDay("so_nguyen", new BuiltinValue("so_nguyen", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("so_nguyen", 1, a.Count, d);
+            double val = Convert.ToDouble(a[0]);
+            return val == Math.Floor(val);
+        }));
+
+        global.GanDay("PI", Math.PI);
+        global.GanDay("E", Math.E);
     }
 
     // ─── JSON helpers ───────────────────────────────────────────────

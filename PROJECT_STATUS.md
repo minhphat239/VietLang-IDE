@@ -1,76 +1,68 @@
 # PROJECT STATUS — VietLang IDE
 
-## Ngày cập nhật: 20/09/2026
+## Ngày cập nhật: 21/09/2026
 
 ## 1. Tổng quan dự án
 - **Tên:** VietLang IDE (Python IDLE replica)
 - **Mục tiêu:** Tạo IDE chạy trên terminal cho ngôn ngữ VietLang
 - **Ngôn ngữ:** Viết bằng .vl (VietLang), chạy trên engine C#
+- **GitHub:** https://github.com/minhphat239/VietLang-IDE
 
-## 2. Hành động đã làm
+## 2. Hành động đã làm ✅
 
-### Builtins mới (149/149 PASS)
-- `thực_thi(code)` — eval code VietLang từ chuỗi
-- `đọc_file(path)`, `ghi_file(path, nội_dung)`, `tồn_tại(path)`
-- `json_phân_tách(string)`, `json_gộp(object)`
-- `thoát()` — thoát chương trình
-- `chạy_lệnh(cmd)` — chạy lệnh system
-- `lấy_tham_số()` — lấy tham số dòng lệnh
-- `in_mau(text, color)` — in màu (red/green/yellow/blue/magenta/cyan/white)
-- `xóa_màn_hình()` — clear screen
-- `nhập(prompt)` — đọc input với prompt
-- `in_ra(x, y, ..., sep, end)` — in ra với sep/end
-- `lấy_tất_cả_biến()`, `gán_biến(tên, giá_trị)` — session persistence
-- 6 NLP builtins + 3 regex builtins
-
-### REPL hoàn chỉnh (repl.vl — 196 dòng)
+### Milestone 1: REPL Core ✅
+- `repl.vl` (228 dòng) — REPL hoàn chỉnh
 - Prompt `>>> ` màu xanh lá
-- Xử lý EOF (Ctrl+D)
+- Xử lý EOF (Ctrl+D thoát)
 - Lệnh đặc biệt: `thoát`, `lịch_sử`, `lưu_session`, `xóa_session`, `xóa_history`, `xóa_state`, `trợ_giúp`
-- Session persistence (.vlsession)
-- History persistence (.vlhistory, giới hạn 1000 lệnh)
-- Hiển thị lỗi màu đỏ
+- Session persistence (.vlsession) — lưu/restore biến
+- History persistence (.vlhistory) — giới hạn 1000 lệnh
+- Smart error display — parse lỗi, hiển thị dòng + source line
 
-### Test suite
-- 149/149 test PASS
-- Bao gồm: lexer, parser, interpreter, dict, exception, module, methods, golden tests
+### Milestone 2: Script Runner ✅
+- `script_runner.vl` — chạy file .vl với error display đẹp
+- `--time` flag — hiển thị thời gian chạy
+- Kiểm tra file tồn tại, hiển thị lỗi đỏ
 
-## 3. Dự định tiếp theo
+### Milestone 3: Watch Mode ✅
+- `watch_mode.vl` — theo dõi file .vl, tự chạy lại khi thay đổi
+- Hiển thị banner, lần chạy, thông báo theo dõi
 
-### Milestone 2: Script Runner
-- [ ] IDLE.4: script_runner.vl — chạy file .vl với error display đẹp
-- [ ] IDLE.5: watch_mode.vl — auto-run khi file thay đổi
+### Builtins mới (28 builtins, 149/149 PASS)
+- **Cơ bản:** in_ra(sep/end), nhập(prompt), độ_dài, chuyển_chuỗi, chuyển_số, thêm
+- **NLP:** chuẩn_hóa, tìm_từ, tách_từ, tách_câu, đếm_từ, chuẩn_hóa_tìm_kiếm
+- **Regex:** tìm_kiếm, khớp_pattern, thay_the
+- **REPL:** thực_thi, thoát, đọc_file, ghi_file, tồn_tại, json_phân_tách, json_gộp
+- **System:** chạy_lệnh, lấy_tham_số, in_mau, xóa_màn_hình
+- **Session:** lấy_tất_cả_biến, gán_biến
 
-### Milestone 3: Smart Error Display
-- [ ] IDLE.6: error_formatter.vl — format lỗi ANSI color
-- [ ] IDLE.7: source_highlight.vl — hiển thị dòng bị lỗi
+### Feedback đã gửi (7 files)
+- `ENGINE_BUGS.md` — 9 lỗi engine
+- `ENGINE_SESSION_CHANGES.md` — Thay đổi engine cho session
+- `REPL_BUILTINS.md` — Thiếu builtins (đã fix)
+- `REPL_NHAP_EOF.md` — nhập() EOF (đã fix)
+- `REPL_THUC_THI.md` — Thiếu thực_thi() (đã fix)
+- `SCRIPT_RUNNER_BUGS.md` — Lỗi script runner
+- `SCRIPT_RUNNER_NO_ARGS.md` — No-args timeout
 
-### Milestone 4: Integration
-- [ ] IDLE.8: Tích hợp tất cả vào main
+## 3. Đang làm / Dự định
+
+### Milestone 4: Integration ⏳
+- [ ] IDLE.8: Tích hợp tất cả vào main entry point
 - [ ] IDLE.9: Test toàn diện + documentation
 
-## 4. Mục tiêu dài hạn
-- IDE hoàn chỉnh như Python IDLE
-- Chạy cross-platform (Windows/Linux/macOS)
-- Hỗ trợ REPL, script runner, error display
-- Tích hợp NLP builtins cho xử lý tiếng Việt
+### Milestone 5: Nâng cao ⏳
+- [ ] Cross-platform (xóa `del`, dùng `xóa_file`)
+- [ ] Autocomplete (gợi ý từ khóa, builtin)
+- [ ] Syntax highlighting khi chạy file
+- [ ] Multi-line input trong REPL
 
-## 5. Files quan trọng
-```
-VietLang/
-├── repl.vl                    # REPL hoàn chỉnh
-├── demo/bai_01.vl             # Demo program
-├── src/                       # Engine C#
-│   ├── Builtins.cs            # Builtins (149/149 PASS)
-│   ├── Interpreter.cs         # Interpreter
-│   ├── Parser.cs              # Parser
-│   └── Lexer.cs               # Lexer
-├── tests/                     # Test suite
-├── Feedback/                  # Feedback files
-└── PROJECT_STATUS.md          # File này
-```
+## 4. Lỗi chưa fix
+- `thực_thi()` infinite recursion khi gọi từ .vl (builtins test PASS nhưng gọi từ .vl crash)
+- `script_runner.vl` no-args timeout
+- `chạy_lệnh("del ...")` không cross-platform
 
-## 6. Cách chạy
+## 5. Cách chạy
 ```bash
 # Chạy REPL
 vietlang repl.vl
@@ -80,9 +72,28 @@ vietlang <file.vl>
 
 # Chạy test
 vietlang test
+
+# Chạy script runner
+vietlang script_runner.vl <file.vl>
+
+# Chạy watch mode
+vietlang watch_mode.vl <file.vl>
 ```
 
-## 7. Notes
-- Engine C# (.NET 8) — không sửa khi làm IDE
-- Code .vl viết bằng VietLang, không dùng C#
-- Feedback gửi vào folder Feedback/
+## 6. Cấu trúc repo
+```
+VietLang-IDE/
+├── repl.vl                    # REPL hoàn chỉnh (228 dòng)
+├── script_runner.vl           # Script runner
+├── watch_mode.vl              # Watch mode
+├── PROJECT_STATUS.md          # File này
+├── VietLang/                  # Engine C#
+│   ├── src/Builtins.cs        # 28 builtins
+│   ├── src/Interpreter.cs     # Interpreter
+│   ├── src/Parser.cs          # Parser
+│   ├── src/Lexer.cs           # Lexer
+│   └── tests/                 # 149/149 test
+├── demo/                      # Demo programs
+├── Feedback/                  # 7 files feedback
+└── memory/                    # Memory files
+```

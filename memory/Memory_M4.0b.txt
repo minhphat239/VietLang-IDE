@@ -1,0 +1,18 @@
+## TIEN DO
+M4.0b DONE. Tao tests/TestStdlibIntegrity.cs ([StdlibModule], 2 test).
+Guard: KiemTra(types, allowList) — 3 luat: A) GetAll()->List<LexTest> thieu [StdlibModule] va khong trong allowList; B) DangKy(PhamVi) thieu [StdlibModule] va != "Builtins"; C) allowList ∩ co-attr != rong.
+Bang chung: dotnet build 0 Error(s); dotnet run -- test -> PASS stdlib_integrity_sach + stdlib_integrity_bat_loi; TOTAL 170/170 PASS; file no-BOM (byte dau 117 115 105).
+
+## RUT KINH NGHIEM (quy trình)
+- Guard phai co test falsification (stdlib_integrity_bat_loi dung ViDuXau nested thieu attribute) — neu chi co test "sach" thi guard co the la no-op ma khong ai biet.
+- Sample am phai NESTED de khong lot scan that (GetTypes() tra ca nested); loc t.IsClass && !t.IsNested.
+- AllowList 15 ten legacy chay qua Program.cs; test moi qua loader (co attribute). Luat C chan double-run.
+
+## RUT KINH NGHIEM (UI/UX)
+khong ap dung - backend.
+
+## TU CHAM DIEM
+- Tot: guard 3 luat, co falsification that, no-BOM, khong dung file dung chung.
+- Xau: chua test case type co DangKy(PhamVi) thieu attribute (chi test nhanh GetAll); luat B chua duoc falsify.
+- CHUA VERIFY: luat B/C chua co test am truc tiep (chi suy ra tu code).
+- SOI LAI: moi guard can >=1 test am cho MOI luat, khong chi luat dau.

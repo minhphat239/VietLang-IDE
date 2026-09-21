@@ -1,0 +1,27 @@
+## TIEN DO
+M4.0 DONE. Tao src/Stdlib/{StdlibModuleAttribute,StdlibLoader,DemoStdlib}.cs + tests/TestStdlibDemo.cs.
+Chen Interpreter.cs:236 (Run) + Interpreter.cs:259 (Run shared) StdlibLoader.DangKyTatCa(env).
+Chen Program.cs:98 tests.AddRange(StdlibLoader.LayTatCaTest()). Giu nguyen 15 dong AddRange cu.
+Bang chung: dotnet build Build succeeded 0 Error(s); dotnet run -- test TOTAL 168/168 PASS
+(stdlib_demo_phien_ban PASS, khong trung test); dotnet run -- ..\demo\m4_demo.vl -> 'VietLang v0.2.0'.
+4 file moi deu no-BOM (byte dau 117/110).
+
+## RUT KINH NGHIEM (quy trinh)
+- SPEC M4.0 mau thuan: LayTatCaTest quet MOI type co GetAll() se trung voi 15 dong AddRange cu
+  (Program.cs van goi tay) => dem doi (da quan sat 335/335). DoD doi 137/137 => phai loai trung.
+- Giai phap duy nhat thoa CA 'giu 15 dong cu' LAN 'khong trung': loc type test bang [StdlibModule].
+  => TestStdlibDemo phai gan [StdlibModule]. Worker moi them file test phai nho gan attribute nay,
+  neu khong test se bi bo qua im lang. DAY LA FOOTGUN can nho.
+- Static class trong IL la abstract+sealed => check `type.IsAbstract` se loai oan static class.
+  Da bo check IsAbstract o CA DangKyTatCa lan LayTatCaTest.
+- File .cs moi phai no-BOM: kiem bang byte dau (UTF8 no-BOM: 117='u' hoac 110='n').
+- Build do do worker khac dang sua Builtins.cs song song (them HTTP/GUI builtin). Verify la diem-thoi-gian.
+
+## RUT KINH NGHIEM (UI/UX)
+khong ap dung - backend.
+
+## TU CHAM DIEM
+- Tot: phat hien dung mau thuan spec, tim duoc giai phap duy nhat thoa moi rang buoc; verify that (build+test+demo+git diff).
+- Xau: luc dau viet theo literal spec gay trung test (335), ton vai luot debug; le ra nen doi chieu DoD truoc khi code.
+- CHUA VERIFY: chua chay lai sau khi worker khac ket thuc hoan toan (Builtins.cs dang bi sua song song).
+- SOI LAI: truoc khi code ham quet reflection, phai liet ke het type se match va tinh tong test ky vong truoc.

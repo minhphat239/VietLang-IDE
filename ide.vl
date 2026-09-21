@@ -1,0 +1,167 @@
+# ide.vl — VietLang IDE
+# Chạy: vietlang ide.vl
+
+# ─── Biến toàn cục ─────────────────────────────────────────────
+_file_path = ""
+_is_modified = sai
+
+# ─── Hàm tạo giao diện ──────────────────────────────────────────
+hàm tạo_giao_diện() {
+  # Cửa sổ chính
+  tạo_cửa_sổ("VietLang IDE", 900, 700)
+
+  # ── Thanh công cụ (panel) ──
+  toolbar = tạo_panel()
+  đặt_kích_thước_widget(toolbar, 880, 40)
+  đặt_màu_nền(toolbar, "LightGray")
+
+  btn_mở = tạo_nút("Mở")
+  btn_lưu = tạo_nút("Lưu")
+  btn_lưu_tên = tạo_nút("Lưu thành")
+  btn_chạy = tạo_nút("Chạy")
+  btn_xóa = tạo_nút("Xóa output")
+
+  đặt_kích_thước_widget(btn_mở, 70, 30)
+  đặt_kích_thước_widget(btn_lưu, 70, 30)
+  đặt_kích_thước_widget(btn_lưu_tên, 90, 30)
+  đặt_kích_thước_widget(btn_chạy, 70, 30)
+  đặt_kích_thước_widget(btn_xóa, 90, 30)
+
+  thêm_vào_panel(toolbar, btn_mở)
+  thêm_vào_panel(toolbar, btn_lưu)
+  thêm_vào_panel(toolbar, btn_lưu_tên)
+  thêm_vào_panel(toolbar, btn_chạy)
+  thêm_vào_panel(toolbar, btn_xóa)
+
+  # ── Label đường dẫn file ──
+  lbl_file = tạo_nhãn("Chưa mở file")
+  đặt_font(lbl_file, 9)
+
+  # ── Code editor ──
+  editor = tạo_text_editor("")
+  đặt_kích_thước_widget(editor, 870, 380)
+
+  # ── Label output ──
+  lbl_output = tạo_nhãn("── Output ──")
+  đặt_font(lbl_output, 10)
+
+  # ── Output area ──
+  output = tạo_output("")
+  đặt_kích_thước_widget(output, 870, 180)
+
+  # ── Status bar ──
+  status = tạo_nhãn("Sẵn sàng")
+  đặt_font(status, 9)
+  đặt_màu_nền(status, "WhiteSmoke")
+}
+
+# ─── Hàm mở file ────────────────────────────────────────────────
+hàm mở_file() {
+  path = hộp_thoại_mở_file("VietLang (*.vl)|*.vl|All (*.*)|*.*")
+  nếu path == "" {
+    trả_về
+  }
+  _file_path = path
+  nội_dung = đọc_file(path)
+  editor_ctrl = lấy_widget("editor")
+  nếu editor_ctrl != rỗng {
+    đặt_văn_bản(editor_ctrl, nội_dung)
+  }
+  _is_modified = sai
+ .lbl_file_ctrl = lấy_widget("lbl_file")
+  nếu .lbl_file_ctrl != rỗng {
+    đặt_văn_bản(.lbl_file_ctrl, path)
+  }
+  trạng_thái("Đã mở: " + path)
+}
+
+# ─── Hàm lưu file ────────────────────────────────────────────────
+hàm lưu_file() {
+  nếu _file_path == "" {
+    lưu_file_as()
+    trả_về
+  }
+  editor_ctrl = lấy_widget("editor")
+  nếu editor_ctrl == rỗng {
+    trả_về
+  }
+  nội_dung = lấy_văn_bản(editor_ctrl)
+  ghi_file(_file_path, nội_dung)
+  _is_modified = sai
+  trạng_thái("Đã lưu: " + _file_path)
+}
+
+hàm lưu_file_as() {
+  path = hộp_thoại_lưu_file("VietLang (*.vl)|*.vl|All (*.*)|*.*")
+  nếu path == "" {
+    trả_về
+  }
+  _file_path = path
+  editor_ctrl = lấy_widget("editor")
+  nếu editor_ctrl == rỗng {
+    trả_về
+  }
+  nội_dung = lấy_văn_bản(editor_ctrl)
+  ghi_file(_file_path, nội_dung)
+  _is_modified = sai
+  lbl_file_ctrl = lấy_widget("lbl_file")
+  nếu lbl_file_ctrl != rỗng {
+    đặt_văn_bản(lbl_file_ctrl, path)
+  }
+  trạng_thái("Đã lưu: " + path)
+}
+
+# ─── Hàm chạy code ──────────────────────────────────────────────
+hàm chạy_code() {
+  editor_ctrl = lấy_widget("editor")
+  output_ctrl = lấy_widget("output")
+  nếu editor_ctrl == rỗng hoặc output_ctrl == rỗng {
+    trả_về
+  }
+
+  nội_dung = lấy_văn_bản(editor_ctrl)
+  xóa_trống(output_ctrl)
+  đặt_văn_bản(output_ctrl, "Đang chạy...\n")
+
+  # Chạy code và ghi output
+  thử {
+    # Tạo file tạm
+    file_tạm = "_ide_temp.vl"
+    ghi_file(file_tạm, nội_dung)
+
+    # Chạy qua vietlang
+    kết_quả = chạy_lệnh("vietlang.cmd " + file_tạm)
+
+    # Hiển thị output
+    nếu độ_dài(kết_quả) > 0 {
+      thêm_dòng(output_ctrl, kết_quả)
+    } không_thì {
+      thêm_dòng(output_ctrl, "(không có output)")
+    }
+
+    # Xóa file tạm
+    xóa_file(file_tạm)
+
+    trạng_thái("Chạy xong!")
+  } ngoại_lệ (e) {
+    thêm_dòng(output_ctrl, "Lỗi: " + e)
+    trạng_thái("Có lỗi!")
+  }
+}
+
+# ─── Hàm trạng thái ──────────────────────────────────────────────
+hàm trạng_thái(text) {
+  status_ctrl = lấy_widget("status")
+  nếu status_ctrl != rỗng {
+    đặt_văn_bản(status_ctrl, text)
+  }
+}
+
+hàm lấy_widget(tên) {
+  # Trả widget theo tên (simplified — trong thực tế cần registry)
+  trả_về rỗng
+}
+
+# ─── Chạy IDE ────────────────────────────────────────────────────
+tạo_giao_diện()
+chạy()

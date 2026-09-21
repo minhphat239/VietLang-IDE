@@ -840,6 +840,176 @@ public static class Builtins
             }
             return null;
         }));
+
+        // ─── GUI: đặt_kích_thước_widget ───────────────────────────
+        global.GanDay("đặt_kích_thước_widget", new BuiltinValue("đặt_kích_thước_widget", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_kích_thước_widget", 3, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (a[1] is double w && a[2] is double h)
+                ctrl.Size = new System.Drawing.Size((int)w, (int)h);
+            return null;
+        }));
+
+        // ─── GUI: đặt_vị_trí ─────────────────────────────────────
+        global.GanDay("đặt_vị_trí", new BuiltinValue("đặt_vị_trí", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_vị_trí", 3, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (a[1] is double x && a[2] is double y)
+                ctrl.Location = new System.Drawing.Point((int)x, (int)y);
+            return null;
+        }));
+
+        // ─── GUI: đặt_font ────────────────────────────────────────
+        global.GanDay("đặt_font", new BuiltinValue("đặt_font", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_font", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (a[1] is double size)
+                ctrl.Font = new System.Drawing.Font("Consolas", (float)size);
+            return null;
+        }));
+
+        // ─── GUI: đặt_màu_nền ─────────────────────────────────────
+        global.GanDay("đặt_màu_nền", new BuiltinValue("đặt_màu_nền", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_màu_nền", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            var colorName = Interpreter.ChuoiHoa(a[1]);
+            ctrl.BackColor = System.Drawing.Color.FromName(colorName);
+            return null;
+        }));
+
+        // ─── GUI: đặt_màu_chữ ─────────────────────────────────────
+        global.GanDay("đặt_màu_chữ", new BuiltinValue("đặt_màu_chữ", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_màu_chữ", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            var colorName = Interpreter.ChuoiHoa(a[1]);
+            ctrl.ForeColor = System.Drawing.Color.FromName(colorName);
+            return null;
+        }));
+
+        // ─── GUI: tạo_text_editor ──────────────────────────────────
+        global.GanDay("tạo_text_editor", new BuiltinValue("tạo_text_editor", (i, a, d) =>
+        {
+            EnsureForm();
+            var rtb = new System.Windows.Forms.RichTextBox();
+            rtb.Width = 600;
+            rtb.Height = 400;
+            rtb.Font = new System.Drawing.Font("Consolas", 11);
+            rtb.BackColor = System.Drawing.Color.FromArgb(30, 30, 30);
+            rtb.ForeColor = System.Drawing.Color.White;
+            rtb.WordWrap = false;
+            rtb.AcceptsTab = true;
+            rtb.DetectUrls = false;
+            rtb.Margin = new System.Windows.Forms.Padding(2);
+            if (a.Count >= 1) rtb.Text = Interpreter.ChuoiHoa(a[0]);
+            _panel.Controls.Add(rtb);
+            return new WidgetValue(rtb, "text_editor");
+        }));
+
+        // ─── GUI: tạo_output ───────────────────────────────────────
+        global.GanDay("tạo_output", new BuiltinValue("tạo_output", (i, a, d) =>
+        {
+            EnsureForm();
+            var rtb = new System.Windows.Forms.RichTextBox();
+            rtb.Width = 600;
+            rtb.Height = 200;
+            rtb.Font = new System.Drawing.Font("Consolas", 10);
+            rtb.BackColor = System.Drawing.Color.FromArgb(15, 15, 15);
+            rtb.ForeColor = System.Drawing.Color.LightGreen;
+            rtb.ReadOnly = true;
+            rtb.WordWrap = true;
+            rtb.Margin = new System.Windows.Forms.Padding(2);
+            _panel.Controls.Add(rtb);
+            return new WidgetValue(rtb, "output");
+        }));
+
+        // ─── GUI: tạo_panel ────────────────────────────────────────
+        global.GanDay("tạo_panel", new BuiltinValue("tạo_panel", (i, a, d) =>
+        {
+            EnsureForm();
+            var panel = new System.Windows.Forms.Panel();
+            panel.Width = 600;
+            panel.Height = 50;
+            panel.Margin = new System.Windows.Forms.Padding(2);
+            _panel.Controls.Add(panel);
+            return new WidgetValue(panel, "panel");
+        }));
+
+        // ─── GUI: thêm_vào_panel ──────────────────────────────────
+        global.GanDay("thêm_vào_panel", new BuiltinValue("thêm_vào_panel", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("thêm_vào_panel", 2, a.Count, d);
+            var panelCtrl = GetWidget(a[0]);
+            var childCtrl = GetWidget(a[1]);
+            if (panelCtrl is System.Windows.Forms.Panel panel)
+                panel.Controls.Add(childCtrl);
+            return null;
+        }));
+
+        // ─── GUI: hộp_thoại_mở_file ────────────────────────────────
+        global.GanDay("hộp_thoại_mở_file", new BuiltinValue("hộp_thoại_mở_file", (i, a, d) =>
+        {
+            var filter = a.Count >= 1 ? Interpreter.ChuoiHoa(a[0]) : "VietLang (*.vl)|*.vl|All (*.*)|*.*";
+            var ofd = new System.Windows.Forms.OpenFileDialog();
+            ofd.Filter = filter;
+            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                return ofd.FileName;
+            return "";
+        }));
+
+        // ─── GUI: hộp_thoại_lưu_file ───────────────────────────────
+        global.GanDay("hộp_thoại_lưu_file", new BuiltinValue("hộp_thoại_lưu_file", (i, a, d) =>
+        {
+            var filter = a.Count >= 1 ? Interpreter.ChuoiHoa(a[0]) : "VietLang (*.vl)|*.vl|All (*.*)|*.*";
+            var sfd = new System.Windows.Forms.SaveFileDialog();
+            sfd.Filter = filter;
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                return sfd.FileName;
+            return "";
+        }));
+
+        // ─── GUI: lấy_dòng ─────────────────────────────────────────
+        global.GanDay("lấy_dòng", new BuiltinValue("lấy_dòng", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("lấy_dòng", 2, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (a[1] is double lineNo && ctrl is System.Windows.Forms.RichTextBox rtb)
+            {
+                int ln = (int)lineNo;
+                if (ln < 0 || ln >= rtb.Lines.Length) return "";
+                return rtb.Lines[ln];
+            }
+            return "";
+        }));
+
+        // ─── GUI: đặt_dòng ─────────────────────────────────────────
+        global.GanDay("đặt_dòng", new BuiltinValue("đặt_dòng", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đặt_dòng", 3, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (a[1] is double lineNo && ctrl is System.Windows.Forms.RichTextBox rtb)
+            {
+                int ln = (int)lineNo;
+                var text = Interpreter.ChuoiHoa(a[2]);
+                if (ln >= 0 && ln < rtb.Lines.Length)
+                    rtb.Lines[ln] = text;
+            }
+            return null;
+        }));
+
+        // ─── GUI: đếm_dòng ─────────────────────────────────────────
+        global.GanDay("đếm_dòng", new BuiltinValue("đếm_dòng", (i, a, d) =>
+        {
+            YeucauSoLuongThamSo("đếm_dòng", 1, a.Count, d);
+            var ctrl = GetWidget(a[0]);
+            if (ctrl is System.Windows.Forms.RichTextBox rtb)
+                return (double)rtb.Lines.Length;
+            return 0.0;
+        }));
     }
 
     // ─── GUI builtins (WinForms) ──────────────────────────────────────

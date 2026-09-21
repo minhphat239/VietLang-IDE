@@ -4,14 +4,14 @@ setlocal
 set "VL=%~dp0VietLang"
 
 if "%~1"=="" (
-  echo VietLang v0.1 — Ngon ngu lap trinh tieng Viet
+  echo VietLang v0.2.0 — Ngon ngu lap trinh tieng Viet
   echo.
   echo Cach dung:
   echo   vietlang ^<file.vl^>          Chay chuong trinh .vl
   echo   vietlang test                Chay bo tu kiem tra
   echo.
   echo Vi du:
-  echo   vietlang demo\bai_01.vl
+  echo   vietlang examples\bai_01.vl
   echo   vietlang test
   echo.
   goto :eof

@@ -1,24 +1,24 @@
-# Test HTTP builtins
+﻿# Test HTTP builtins
 thử {
     # Test lay() - GET request
-    res = lấy("https://httpbin.org/get")
-    nếu(res.chứa("origin")) {
+    res = lay("https://httpbin.org/get")
+    nếu(res.chua("origin")) {
         in_ra("GET OK")
     } không_thì {
         ném("GET failed: no origin")
     }
 
     # Test gui() - POST JSON
-    res2 = gửi("https://httpbin.org/post", "test")
-    nếu(res2.chứa("data")) {
+    res2 = gui("https://httpbin.org/post", "test")
+    nếu(res2.chua("data")) {
         in_ra("POST OK")
     } không_thì {
         ném("POST failed: no data")
     }
 
     # Test gui_chuoi() - POST custom content type
-    res3 = gửi_chuỗi("https://httpbin.org/post", "hello", "text/plain")
-    nếu(chuyển_chuỗi(res3).độ_dài() > 0) {
+    res3 = gui_chuoi("https://httpbin.org/post", "hello", "text/plain")
+    nếu(chuyen_chuoi(res3).do_dai() > 0) {
         in_ra("POST_CUSTOM OK")
     } không_thì {
         ném("POST_CUSTOM failed: empty response")
@@ -29,7 +29,7 @@ thử {
 
 # Test lay() with invalid URL - should not crash
 thử {
-    lấy("https://invalid.example.com")
+    lay("https://invalid.example.com")
     in_ra("INVALID should have failed")
 } ngoại_lệ (e) {
     in_ra("INVALID OK")

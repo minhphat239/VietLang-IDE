@@ -1,0 +1,14 @@
+﻿# demo_gui.vl — Demo GUI builtins cho VietLang
+
+# Tạo cửa sổ
+tao_cua_so("VietLang GUI Demo", 400, 300)
+
+# Thêm widgets
+tao_nhan("Chào mừng đến VietLang GUI!")
+tao_nhan("Nhập tên của bạn:")
+
+ô_ten = tao_o_van_ban("")
+tao_nut("Chào")
+
+# Chạy GUI
+chay()

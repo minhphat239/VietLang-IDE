@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -56,73 +56,73 @@ public static class TestVietNamese
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chua '{maCu}'");
     }
 
-    // 1. chuẩn_hóa("Xin Chào Thế Giới") → "Xin Chao The Gioi"
+    // 1. chuan_hoa("Xin Chào Thế Giới") → "Xin Chao The Gioi"
     private static bool TestChuanHoaCoDau()
-        => KiemTra(Chay("in_ra(chuẩn_hóa(\"Xin Chào Thế Giới\"))") == "Xin Chao The Gioi", "chuẩn_hóa bỏ dấu cơ bản");
+        => KiemTra(Chay("in_ra(chuan_hoa(\"Xin Chào Thế Giới\"))") == "Xin Chao The Gioi", "chuan_hoa bỏ dấu cơ bản");
 
-    // 2. chuẩn_hóa("Đường sắt") → "Duong sat"
+    // 2. chuan_hoa("Đường sắt") → "Duong sat"
     private static bool TestChuanHoaDuongSat()
-        => KiemTra(Chay("in_ra(chuẩn_hóa(\"Đường sắt\"))") == "Duong sat", "chuẩn_hóa Đường sắt");
+        => KiemTra(Chay("in_ra(chuan_hoa(\"Đường sắt\"))") == "Duong sat", "chuan_hoa Đường sắt");
 
-    // 3. chuẩn_hóa("already") → "already"
+    // 3. chuan_hoa("already") → "already"
     private static bool TestChuanHoaAlready()
-        => KiemTra(Chay("in_ra(chuẩn_hóa(\"already\"))") == "already", "chuẩn_hóa giữ nguyên ASCII");
+        => KiemTra(Chay("in_ra(chuan_hoa(\"already\"))") == "already", "chuan_hoa giữ nguyên ASCII");
 
-    // 4. chuẩn_hóa(123) → RuntimeError
+    // 4. chuan_hoa(123) → RuntimeError
     private static bool TestChuanHoaError()
     {
-        ChayLoi("chuẩn_hóa(123)", "chuẩn_hóa cần chuỗi");
+        ChayLoi("chuan_hoa(123)", "chuan_hoa cần chuỗi");
         return true;
     }
 
-    // 5. tìm_từ("xin chào chào", "chào") → [4, 10]
+    // 5. tim_tu("xin chào chào", "chào") → [4, 10]
     private static bool TestTimTu()
     {
-        string src = "vitri = tìm_từ(\"xin chào chào\", \"chào\")\nin_ra(vitri)";
+        string src = "vitri = tim_tu(\"xin chào chào\", \"chào\")\nin_ra(vitri)";
         string out_ = Chay(src);
-        return KiemTra(out_ == "[4, 9]", $"tìm_từ multiple matches: got '{out_}'");
+        return KiemTra(out_ == "[4, 9]", $"tim_tu multiple matches: got '{out_}'");
     }
 
-    // 6. tìm_từ("hello", "xyz") → []
+    // 6. tim_tu("hello", "xyz") → []
     private static bool TestTimTuKhongTimThay()
     {
-        string src = "vitri = tìm_từ(\"hello\", \"xyz\")\nin_ra(vitri)";
-        return KiemTra(Chay(src) == "[]", "tìm_từ no match");
+        string src = "vitri = tim_tu(\"hello\", \"xyz\")\nin_ra(vitri)";
+        return KiemTra(Chay(src) == "[]", "tim_tu no match");
     }
 
-    // 7. tách_từ("xin chào thế giới") → ["xin", "chào", "thế", "giới"]
+    // 7. tach_tu("xin chào thế giới") → ["xin", "chào", "thế", "giới"]
     private static bool TestTachTu()
     {
-        string src = "từ_list = tách_từ(\"xin chào thế giới\")\nvới t trong từ_list {\n  in_ra(t)\n}";
-        return KiemTra(Chay(src) == "xin\nchào\nthế\ngiới", "tách_từ phân tách đúng");
+        string src = "từ_list = tach_tu(\"xin chào thế giới\")\nvới t trong từ_list {\n  in_ra(t)\n}";
+        return KiemTra(Chay(src) == "xin\nchào\nthế\ngiới", "tach_tu phân tách đúng");
     }
 
-    // 8. tách_câu("A. B? C!") → ["A.", "B?", "C!"]
+    // 8. tach_cau("A. B? C!") → ["A.", "B?", "C!"]
     private static bool TestTachCau()
     {
-        string src = "câu_list = tách_câu(\"A. B? C!\")\nvới c trong câu_list {\n  in_ra(c)\n}";
-        return KiemTra(Chay(src) == "A.\nB?\nC!", "tách_câu giữ delimiter");
+        string src = "câu_list = tach_cau(\"A. B? C!\")\nvới c trong câu_list {\n  in_ra(c)\n}";
+        return KiemTra(Chay(src) == "A.\nB?\nC!", "tach_cau giữ delimiter");
     }
 
-    // 9. tách_câu("no punct") → ["no punct"]
+    // 9. tach_cau("no punct") → ["no punct"]
     private static bool TestTachCauNoPunct()
     {
-        string src = "câu_list = tách_câu(\"no punct\")\nvới c trong câu_list {\n  in_ra(c)\n}";
-        return KiemTra(Chay(src) == "no punct", "tách_câu không có dấu câu");
+        string src = "câu_list = tach_cau(\"no punct\")\nvới c trong câu_list {\n  in_ra(c)\n}";
+        return KiemTra(Chay(src) == "no punct", "tach_cau không có dấu câu");
     }
 
-    // 10. đếm_từ("xin chào") → 2
+    // 10. dem_tu("xin chào") → 2
     private static bool TestDemTu()
-        => KiemTra(Chay("in_ra(đếm_từ(\"xin chào\"))") == "2", "đếm_từ('xin chào') = 2");
+        => KiemTra(Chay("in_ra(dem_tu(\"xin chào\"))") == "2", "dem_tu('xin chào') = 2");
 
-    // 11. đếm_từ("") → 0
+    // 11. dem_tu("") → 0
     private static bool TestDemTuRong()
-        => KiemTra(Chay("in_ra(đếm_từ(\"\"))") == "0", "đếm_từ('') = 0");
+        => KiemTra(Chay("in_ra(dem_tu(\"\"))") == "0", "dem_tu('') = 0");
 
-    // 12. chuẩn_hóa_tìm_kiếm("Xin Chào") → "xin chao"
+    // 12. chuan_hoa_tim_kiem("Xin Chào") → "xin chao"
     private static bool TestChuanHoaTimKiem()
-        => KiemTra(Chay("in_ra(chuẩn_hóa_tìm_kiếm(\"Xin Chào\"))") == "xin chao", "chuẩn_hóa_tìm_kiếm lowercase+bo_dau");
+        => KiemTra(Chay("in_ra(chuan_hoa_tim_kiem(\"Xin Chào\"))") == "xin chao", "chuan_hoa_tim_kiem lowercase+bo_dau");
 }

@@ -1,0 +1,3 @@
+﻿# test_thucthi.vl
+nội_dung = doc_file("D:\\Documents\\VietLang\\test_simple.vl")
+thuc_thi(nội_dung)

@@ -1,3 +1,0 @@
-# test_args.vl
-tham_số = lấy_tham_số()
-in_ra("len:", độ_dài(tham_số))

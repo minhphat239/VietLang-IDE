@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -59,7 +59,7 @@ public static class TestException
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chua '{maCu}'");
     }
 
     // 1. try-catch basic: ném rồi bắt được.
@@ -152,7 +152,7 @@ public static class TestException
     private static bool TestTryCatchRuntimeError()
     {
         string src = "thử {\n  x = 10 / 0\n} ngoại_lệ (e) {\n  in_ra(e)\n}";
-        return KiemTra(Chay(src).Contains("chia"), "catch bắt RuntimeError, in message chứa 'chia'");
+        return KiemTra(Chay(src).Contains("chia"), "catch bắt RuntimeError, in message chua 'chia'");
     }
 
     // 14. try-catch: return trong catch.

@@ -1,46 +1,46 @@
-# test_filesystem.vl — File System library golden test
+﻿# test_filesystem.vl — File System library golden test
 
 d = "_test_fs_cleanup"
 
-# 1. tạo_thu_muc — create directory
-kq = tạo_thu_muc(d)
-nếu kq != "đã tạo" { ném("FAIL: tạo_thu_muc") }
+# 1. tao_thu_muc — create directory
+kq = tao_thu_muc(d)
+nếu kq != "đã tạo" { ném("FAIL: tao_thu_muc") }
 
 # 2. ghi_file — write file into new dir
 kq = ghi_file(d + "/hello.txt", "hello")
 nếu kq != "hello" { ném("FAIL: ghi_file") }
 
-# 3. đọc_thu_muc — list directory
-ds = đọc_thu_muc(d)
-nếu độ_dài(ds) != 1 { ném("FAIL: đọc_thu_muc length " + chuyển_chuỗi(độ_dài(ds))) }
-nếu ds[0] != "hello.txt" { ném("FAIL: đọc_thu_muc content " + ds[0]) }
+# 3. doc_thu_muc — list directory
+ds = doc_thu_muc(d)
+nếu do_dai(ds) != 1 { ném("FAIL: doc_thu_muc length " + chuyen_chuoi(do_dai(ds))) }
+nếu ds[0] != "hello.txt" { ném("FAIL: doc_thu_muc content " + ds[0]) }
 
-# 4. kích_thước_file — file size (UTF-8 BOM = 3 bytes + "hello" = 8)
-sz = kích_thước_file(d + "/hello.txt")
-nếu sz != 8 { ném("FAIL: kích_thước_file " + chuyển_chuỗi(sz)) }
+# 4. kich_thuoc_file — file size (UTF-8 BOM = 3 bytes + "hello" = 8)
+sz = kich_thuoc_file(d + "/hello.txt")
+nếu sz != 8 { ném("FAIL: kich_thuoc_file " + chuyen_chuoi(sz)) }
 
-# 5. là_file — is file
-nếu là_file(d + "/hello.txt") != đúng { ném("FAIL: là_file") }
+# 5. la_file — is file
+nếu la_file(d + "/hello.txt") != đúng { ném("FAIL: la_file") }
 
-# 6. là_thu_muc — is directory
-nếu là_thu_muc(d) != đúng { ném("FAIL: là_thu_muc") }
+# 6. la_thu_muc — is directory
+nếu la_thu_muc(d) != đúng { ném("FAIL: la_thu_muc") }
 
-# 7. sao_copy — copy file
-kq = sao_copy(d + "/hello.txt", d + "/copy.txt")
-nếu kq != "đã sao chép" { ném("FAIL: sao_copy") }
-nếu không(tồn_tại(d + "/copy.txt")) { ném("FAIL: sao_copy file missing") }
+# 7. sao_chep — copy file
+kq = sao_chep(d + "/hello.txt", d + "/copy.txt")
+nếu kq != "đã sao chép" { ném("FAIL: sao_chep") }
+nếu không(ton_tai(d + "/copy.txt")) { ném("FAIL: sao_chep file missing") }
 
-# 8. xóa_file — delete file
-kq = xóa_file(d + "/copy.txt")
-nếu kq != "đã xóa" { ném("FAIL: xóa_file") }
-nếu tồn_tại(d + "/copy.txt") { ném("FAIL: xóa_file still exists") }
+# 8. xoa_file — delete file
+kq = xoa_file(d + "/copy.txt")
+nếu kq != "đã xóa" { ném("FAIL: xoa_file") }
+nếu ton_tai(d + "/copy.txt") { ném("FAIL: xoa_file still exists") }
 
-# 9. đi_tường — resolve path
-duong = đi_tường(d + "/hello.txt")
-nếu độ_dài(duong) < 1 { ném("FAIL: đi_tường empty") }
+# 9. di_tuong — resolve path
+duong = di_tuong(d + "/hello.txt")
+nếu do_dai(duong) < 1 { ném("FAIL: di_tuong empty") }
 
 # 10. cleanup
-xóa_file(d + "/hello.txt")
-xóa_file(d)
+xoa_file(d + "/hello.txt")
+xoa_file(d)
 
 in_ra("PASS: filesystem tests")

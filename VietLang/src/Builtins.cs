@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -24,7 +24,7 @@ public static class Builtins
         if (nhan != can) throw Loi(dong, $"hàm '{ten}' cần {can} tham số, nhận {nhan}");
     }
 
-    /// <summary>Thêm builtin: in_ra, độ_dài, chuyển_chuỗi, chuyển_số, nhập, thêm + 6 NLP + 3 regex + 7 REPL (file I/O, JSON, system, ANSI, sep/end).</summary>
+    /// <summary>Thêm builtin: in_ra, do_dai, chuyen_chuoi, chuyen_so, nhap, them + 6 NLP + 3 regex + 7 REPL (file I/O, JSON, system, ANSI, sep/end).</summary>
     public static void DangKy(PhamVi global)
     {
         global.GanDay("in_ra", new BuiltinValue("in_ra", (i, a, d) =>
@@ -44,64 +44,64 @@ public static class Builtins
             return null;
         }));
 
-        global.GanDay("độ_dài", new BuiltinValue("độ_dài", (i, a, d) =>
+        global.GanDay("do_dai", new BuiltinValue("do_dai", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("độ_dài", 1, a.Count, d);
+            YeucauSoLuongThamSo("do_dai", 1, a.Count, d);
             if (a[0] is List<object> list) return (double)list.Count;
             if (a[0] is string s) return (double)s.Length;
             if (a[0] is DictValue dict) return (double)dict.Pairs.Count;
-            throw Loi(d, "độ_dài chỉ áp dụng cho mảng, chuỗi hoặc dict");
+            throw Loi(d, "do_dai chỉ áp dụng cho mảng, chuỗi hoặc dict");
         }));
 
-        global.GanDay("chuyển_chuỗi", new BuiltinValue("chuyển_chuỗi", (i, a, d) =>
+        global.GanDay("chuyen_chuoi", new BuiltinValue("chuyen_chuoi", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("chuyển_chuỗi", 1, a.Count, d);
+            YeucauSoLuongThamSo("chuyen_chuoi", 1, a.Count, d);
             return Interpreter.ChuoiHoa(a[0]);
         }));
 
-        global.GanDay("chuyển_số", new BuiltinValue("chuyển_số", (i, a, d) =>
+        global.GanDay("chuyen_so", new BuiltinValue("chuyen_so", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("chuyển_số", 1, a.Count, d);
+            YeucauSoLuongThamSo("chuyen_so", 1, a.Count, d);
             string chuoiRa = Interpreter.ChuoiHoa(a[0]);
             if (double.TryParse(chuoiRa, NumberStyles.Float, CultureInfo.InvariantCulture, out double v))
                 return v;
             throw Loi(d, $"không chuyển được '{chuoiRa}' thành số");
         }));
 
-        global.GanDay("nhập", new BuiltinValue("nhập", (i, a, d) =>
+        global.GanDay("nhap", new BuiltinValue("nhap", (i, a, d) =>
         {
-            if (a.Count > 1) throw Loi(d, $"hàm 'nhập' cần 0 hoặc 1 tham số, nhận {a.Count}");
+            if (a.Count > 1) throw Loi(d, $"hàm 'nhap' cần 0 hoặc 1 tham số, nhận {a.Count}");
             if (a.Count == 1)
                 Console.Write(Interpreter.ChuoiHoa(a[0]));
             return Console.ReadLine();
         }));
 
-        global.GanDay("thêm", new BuiltinValue("thêm", (i, a, d) =>
+        global.GanDay("them", new BuiltinValue("them", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("thêm", 2, a.Count, d);
+            YeucauSoLuongThamSo("them", 2, a.Count, d);
             if (!(a[0] is List<object> mang))
-                throw Loi(d, "tham số đầu của 'thêm' phải là mảng");
+                throw Loi(d, "tham số đầu của 'them' phải là mảng");
             mang.Add(a[1]);
             return mang;
         }));
 
         // ─── 6 builtin tiếng Việt (M3.1) ─────────────────────────────
 
-        global.GanDay("chuẩn_hóa", new BuiltinValue("chuẩn_hóa", (i, a, d) =>
+        global.GanDay("chuan_hoa", new BuiltinValue("chuan_hoa", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("chuẩn_hóa", 1, a.Count, d);
+            YeucauSoLuongThamSo("chuan_hoa", 1, a.Count, d);
             if (a[0] is not string s)
-                throw Loi(d, $"chuẩn_hóa cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"chuan_hoa cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return Interpreter.BoDauTiengViet(s);
         }));
 
-        global.GanDay("tìm_từ", new BuiltinValue("tìm_từ", (i, a, d) =>
+        global.GanDay("tim_tu", new BuiltinValue("tim_tu", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tìm_từ", 2, a.Count, d);
+            YeucauSoLuongThamSo("tim_tu", 2, a.Count, d);
             if (a[0] is not string text)
-                throw Loi(d, $"tham số 1 của tìm_từ phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tham số 1 của tim_tu phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (a[1] is not string tu)
-                throw Loi(d, $"tham số 2 của tìm_từ phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
+                throw Loi(d, $"tham số 2 của tim_tu phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
             var result = new List<object>();
             int idx = 0;
             while (true)
@@ -114,19 +114,19 @@ public static class Builtins
             return result;
         }));
 
-        global.GanDay("tách_từ", new BuiltinValue("tách_từ", (i, a, d) =>
+        global.GanDay("tach_tu", new BuiltinValue("tach_tu", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tách_từ", 1, a.Count, d);
+            YeucauSoLuongThamSo("tach_tu", 1, a.Count, d);
             if (a[0] is not string s)
-                throw Loi(d, $"tách_từ cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tach_tu cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return s.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).ToList<object>();
         }));
 
-        global.GanDay("tách_câu", new BuiltinValue("tách_câu", (i, a, d) =>
+        global.GanDay("tach_cau", new BuiltinValue("tach_cau", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tách_câu", 1, a.Count, d);
+            YeucauSoLuongThamSo("tach_cau", 1, a.Count, d);
             if (a[0] is not string s)
-                throw Loi(d, $"tách_câu cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tach_cau cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             var result = new List<object>();
             int start = 0;
             for (int ci = 0; ci < s.Length; ci++)
@@ -144,32 +144,32 @@ public static class Builtins
             return result;
         }));
 
-        global.GanDay("đếm_từ", new BuiltinValue("đếm_từ", (i, a, d) =>
+        global.GanDay("dem_tu", new BuiltinValue("dem_tu", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đếm_từ", 1, a.Count, d);
+            YeucauSoLuongThamSo("dem_tu", 1, a.Count, d);
             if (a[0] is not string s)
-                throw Loi(d, $"đếm_từ cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"dem_tu cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (string.IsNullOrWhiteSpace(s)) return (double)0;
             return (double)s.Split(new[] { ' ', '\t', '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Length;
         }));
 
-        global.GanDay("chuẩn_hóa_tìm_kiếm", new BuiltinValue("chuẩn_hóa_tìm_kiếm", (i, a, d) =>
+        global.GanDay("chuan_hoa_tim_kiem", new BuiltinValue("chuan_hoa_tim_kiem", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("chuẩn_hóa_tìm_kiếm", 1, a.Count, d);
+            YeucauSoLuongThamSo("chuan_hoa_tim_kiem", 1, a.Count, d);
             if (a[0] is not string s)
-                throw Loi(d, $"chuẩn_hóa_tìm_kiếm cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"chuan_hoa_tim_kiem cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return Interpreter.BoDauTiengViet(s).ToLowerInvariant().Trim();
         }));
 
         // ─── 3 builtin regex tiếng Việt (M3.2) ─────────────────────────
 
-        global.GanDay("tìm_kiếm", new BuiltinValue("tìm_kiếm", (i, a, d) =>
+        global.GanDay("tim_kiem", new BuiltinValue("tim_kiem", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tìm_kiếm", 2, a.Count, d);
+            YeucauSoLuongThamSo("tim_kiem", 2, a.Count, d);
             if (a[0] is not string text)
-                throw Loi(d, $"tham số 1 của tìm_kiếm phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tham số 1 của tim_kiem phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (a[1] is not string pattern)
-                throw Loi(d, $"tham số 2 của tìm_kiếm phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
+                throw Loi(d, $"tham số 2 của tim_kiem phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
             var matches = Regex.Matches(text, pattern);
             var result = new List<object>();
             foreach (Match m in matches)
@@ -177,13 +177,13 @@ public static class Builtins
             return result;
         }));
 
-        global.GanDay("khớp_pattern", new BuiltinValue("khớp_pattern", (i, a, d) =>
+        global.GanDay("khop_pattern", new BuiltinValue("khop_pattern", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("khớp_pattern", 2, a.Count, d);
+            YeucauSoLuongThamSo("khop_pattern", 2, a.Count, d);
             if (a[0] is not string text)
-                throw Loi(d, $"tham số 1 của khớp_pattern phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tham số 1 của khop_pattern phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (a[1] is not string pattern)
-                throw Loi(d, $"tham số 2 của khớp_pattern phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
+                throw Loi(d, $"tham số 2 của khop_pattern phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
             return Regex.IsMatch(text, pattern);
         }));
 
@@ -199,19 +199,19 @@ public static class Builtins
             return Regex.Replace(text, pattern, replacement);
         }));
 
-        // ─── REPL cao: thoát + File I/O + JSON ─────────────────────
+        // ─── REPL cao: thoat + File I/O + JSON ─────────────────────
 
-        global.GanDay("thoát", new BuiltinValue("thoát", (i, a, d) =>
+        global.GanDay("thoat", new BuiltinValue("thoat", (i, a, d) =>
         {
             Environment.Exit(0);
             return null;
         }));
 
-        global.GanDay("đọc_file", new BuiltinValue("đọc_file", (i, a, d) =>
+        global.GanDay("doc_file", new BuiltinValue("doc_file", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đọc_file", 1, a.Count, d);
+            YeucauSoLuongThamSo("doc_file", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"đọc_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"doc_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (!File.Exists(path))
                 throw Loi(d, $"không tìm thấy tệp '{path}'");
             return File.ReadAllText(path, System.Text.Encoding.UTF8);
@@ -227,21 +227,21 @@ public static class Builtins
             return noiDung;
         }));
 
-        global.GanDay("tồn_tại", new BuiltinValue("tồn_tại", (i, a, d) =>
+        global.GanDay("ton_tai", new BuiltinValue("ton_tai", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tồn_tại", 1, a.Count, d);
+            YeucauSoLuongThamSo("ton_tai", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"tồn_tại cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"ton_tai cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return File.Exists(path) || Directory.Exists(path);
         }));
 
         // ─── File System builtins ──────────────────────────────────
 
-        global.GanDay("đọc_thu_muc", new BuiltinValue("đọc_thu_muc", (i, a, d) =>
+        global.GanDay("doc_thu_muc", new BuiltinValue("doc_thu_muc", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đọc_thu_muc", 1, a.Count, d);
+            YeucauSoLuongThamSo("doc_thu_muc", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"đọc_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"doc_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (!Directory.Exists(path))
                 throw Loi(d, $"không tìm thấy thư mục '{path}'");
             var result = new List<object>();
@@ -250,11 +250,11 @@ public static class Builtins
             return result;
         }));
 
-        global.GanDay("tạo_thu_muc", new BuiltinValue("tạo_thu_muc", (i, a, d) =>
+        global.GanDay("tao_thu_muc", new BuiltinValue("tao_thu_muc", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tạo_thu_muc", 1, a.Count, d);
+            YeucauSoLuongThamSo("tao_thu_muc", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"tạo_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"tao_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             try
             {
                 Directory.CreateDirectory(path);
@@ -262,15 +262,15 @@ public static class Builtins
             }
             catch (Exception ex)
             {
-                throw Loi(d, $"tạo_thu_muc thất bại: {ex.Message}");
+                throw Loi(d, $"tao_thu_muc thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("xóa_file", new BuiltinValue("xóa_file", (i, a, d) =>
+        global.GanDay("xoa_file", new BuiltinValue("xoa_file", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("xóa_file", 1, a.Count, d);
+            YeucauSoLuongThamSo("xoa_file", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"xóa_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"xoa_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             try
             {
                 if (File.Exists(path))
@@ -288,17 +288,17 @@ public static class Builtins
             catch (RuntimeError) { throw; }
             catch (Exception ex)
             {
-                throw Loi(d, $"xóa_file thất bại: {ex.Message}");
+                throw Loi(d, $"xoa_file thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("sao_copy", new BuiltinValue("sao_copy", (i, a, d) =>
+        global.GanDay("sao_chep", new BuiltinValue("sao_chep", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("sao_copy", 2, a.Count, d);
+            YeucauSoLuongThamSo("sao_chep", 2, a.Count, d);
             if (a[0] is not string src)
-                throw Loi(d, $"sao_copy tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"sao_chep tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (a[1] is not string dst)
-                throw Loi(d, $"sao_copy tham số 2 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
+                throw Loi(d, $"sao_chep tham số 2 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[1])}");
             try
             {
                 if (File.Exists(src))
@@ -311,56 +311,56 @@ public static class Builtins
             catch (RuntimeError) { throw; }
             catch (Exception ex)
             {
-                throw Loi(d, $"sao_copy thất bại: {ex.Message}");
+                throw Loi(d, $"sao_chep thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("đi_tường", new BuiltinValue("đi_tường", (i, a, d) =>
+        global.GanDay("di_tuong", new BuiltinValue("di_tuong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đi_tường", 1, a.Count, d);
+            YeucauSoLuongThamSo("di_tuong", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"đi_tường cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"di_tuong cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return Path.GetFullPath(path);
         }));
 
-        global.GanDay("kích_thước_file", new BuiltinValue("kích_thước_file", (i, a, d) =>
+        global.GanDay("kich_thuoc_file", new BuiltinValue("kich_thuoc_file", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("kích_thước_file", 1, a.Count, d);
+            YeucauSoLuongThamSo("kich_thuoc_file", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"kích_thước_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"kich_thuoc_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (!File.Exists(path))
                 throw Loi(d, $"không tìm thấy tệp '{path}'");
             return (double)new FileInfo(path).Length;
         }));
 
-        global.GanDay("là_thu_muc", new BuiltinValue("là_thu_muc", (i, a, d) =>
+        global.GanDay("la_thu_muc", new BuiltinValue("la_thu_muc", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("là_thu_muc", 1, a.Count, d);
+            YeucauSoLuongThamSo("la_thu_muc", 1, a.Count, d);
             if (a[0] is not string path)
-                throw Loi(d, $"là_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"la_thu_muc cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return Directory.Exists(path);
         }));
 
-        global.GanDay("là_file", new BuiltinValue("là_file", (i, a, d) =>
+        global.GanDay("la_file", new BuiltinValue("la_file", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("là_file", 1, a.Count, d);
+            YeucauSoLuongThamSo("la_file", 1, a.Count, d);
             if (a[0] is not string path)
                 throw Loi(d, $"là_file cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return File.Exists(path);
         }));
 
-        global.GanDay("json_phân_tách", new BuiltinValue("json_phân_tách", (i, a, d) =>
+        global.GanDay("json_phan_tach", new BuiltinValue("json_phan_tach", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("json_phân_tách", 1, a.Count, d);
+            YeucauSoLuongThamSo("json_phan_tach", 1, a.Count, d);
             if (a[0] is not string text)
-                throw Loi(d, $"json_phân_tách cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"json_phan_tach cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             using var doc = JsonDocument.Parse(text);
             return ChuyenTuJson(doc.RootElement);
         }));
 
-        global.GanDay("json_gộp", new BuiltinValue("json_gộp", (i, a, d) =>
+        global.GanDay("json_gop", new BuiltinValue("json_gop", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("json_gộp", 1, a.Count, d);
+            YeucauSoLuongThamSo("json_gop", 1, a.Count, d);
             object value = a[0];
             using var stream = new MemoryStream();
             using (var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = false }))
@@ -372,11 +372,11 @@ public static class Builtins
 
         // ─── 4 builtin REPL TB+THẤP (Tính năng 4–7) ────────────────
 
-        global.GanDay("chạy_lệnh", new BuiltinValue("chạy_lệnh", (i, a, d) =>
+        global.GanDay("chay_lenh", new BuiltinValue("chay_lenh", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("chạy_lệnh", 1, a.Count, d);
+            YeucauSoLuongThamSo("chay_lenh", 1, a.Count, d);
             if (a[0] is not string cmd)
-                throw Loi(d, $"chạy_lệnh cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"chay_lenh cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             try
             {
                 var psi = new ProcessStartInfo("cmd.exe", $"/c {cmd}")
@@ -396,11 +396,11 @@ public static class Builtins
             }
             catch (Exception ex)
             {
-                throw Loi(d, $"chạy_lệnh thất bại: {ex.Message}");
+                throw Loi(d, $"chay_lenh thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("lấy_tham_số", new BuiltinValue("lấy_tham_số", (i, a, d) =>
+        global.GanDay("lay_tham_so", new BuiltinValue("lay_tham_so", (i, a, d) =>
         {
             var args = Environment.GetCommandLineArgs();
             var result = new List<object>();
@@ -428,27 +428,27 @@ public static class Builtins
             return null;
         }));
 
-        global.GanDay("xóa_màn_hình", new BuiltinValue("xóa_màn_hình", (i, a, d) =>
+        global.GanDay("xoa_man_hinh", new BuiltinValue("xoa_man_hinh", (i, a, d) =>
         {
             Console.Write("\x1b[2J\x1b[H");
             return null;
         }));
 
-        // ─── thực_thi: eval code VietLang từ chuỗi ──────────────
+        // ─── thuc_thi: eval code VietLang từ chuỗi ──────────────
 
-        global.GanDay("thực_thi", new BuiltinValue("thực_thi", (i, a, d) =>
+        global.GanDay("thuc_thi", new BuiltinValue("thuc_thi", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("thực_thi", 1, a.Count, d);
+            YeucauSoLuongThamSo("thuc_thi", 1, a.Count, d);
             if (a[0] is not string code)
-                throw Loi(d, $"thực_thi cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"thuc_thi cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             return i.ThucThiChuoi(code, i.CurrentEnv);
         }));
 
-        // ─── REPL session: lấy_tất_cả_biến + gán_biến ──────────────────
+        // ─── REPL session: lay_tat_ca_bien + gan_bien ──────────────────
 
-        global.GanDay("lấy_tất_cả_biến", new BuiltinValue("lấy_tất_cả_biến", (i, a, d) =>
+        global.GanDay("lay_tat_ca_bien", new BuiltinValue("lay_tat_ca_bien", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("lấy_tất_cả_biến", 0, a.Count, d);
+            YeucauSoLuongThamSo("lay_tat_ca_bien", 0, a.Count, d);
             var dict = new DictValue();
             var allVars = i.CurrentEnv.LayTatCa();
             foreach (var kv in allVars)
@@ -459,43 +459,43 @@ public static class Builtins
             return dict;
         }));
 
-        global.GanDay("gán_biến", new BuiltinValue("gán_biến", (i, a, d) =>
+        global.GanDay("gan_bien", new BuiltinValue("gan_bien", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("gán_biến", 2, a.Count, d);
+            YeucauSoLuongThamSo("gan_bien", 2, a.Count, d);
             if (a[0] is not string ten)
-                throw Loi(d, $"gán_biến tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"gan_bien tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             i.CurrentEnv.Gan(ten, a[1]);
             return null;
         }));
 
         // ─── Math library builtins ────────────────────────────────
 
-        global.GanDay("căn_bac_hai", new BuiltinValue("căn_bac_hai", (i, a, d) =>
+        global.GanDay("can_bac_hai", new BuiltinValue("can_bac_hai", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("căn_bac_hai", 1, a.Count, d);
+            YeucauSoLuongThamSo("can_bac_hai", 1, a.Count, d);
             return Math.Sqrt(Convert.ToDouble(a[0]));
         }));
 
-        global.GanDay("tuyệt_đối", new BuiltinValue("tuyệt_đối", (i, a, d) =>
+        global.GanDay("tuyet_doi", new BuiltinValue("tuyet_doi", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tuyệt_đối", 1, a.Count, d);
+            YeucauSoLuongThamSo("tuyet_doi", 1, a.Count, d);
             return Math.Abs(Convert.ToDouble(a[0]));
         }));
 
-        global.GanDay("tối_đa", new BuiltinValue("tối_đa", (i, a, d) =>
+        global.GanDay("toi_da", new BuiltinValue("toi_da", (i, a, d) =>
         {
             if (a.Count < 1 || a.Count > 2)
-                throw Loi(d, $"hàm 'tối_đa' cần 1 hoặc 2 tham số, nhận {a.Count}");
+                throw Loi(d, $"hàm 'toi_da' cần 1 hoặc 2 tham số, nhận {a.Count}");
             double result = Convert.ToDouble(a[0]);
             for (int idx = 1; idx < a.Count; idx++)
                 result = Math.Max(result, Convert.ToDouble(a[idx]));
             return result;
         }));
 
-        global.GanDay("tối_thiểu", new BuiltinValue("tối_thiểu", (i, a, d) =>
+        global.GanDay("toi_thieu", new BuiltinValue("toi_thieu", (i, a, d) =>
         {
             if (a.Count < 1 || a.Count > 2)
-                throw Loi(d, $"hàm 'tối_thiểu' cần 1 hoặc 2 tham số, nhận {a.Count}");
+                throw Loi(d, $"hàm 'toi_thieu' cần 1 hoặc 2 tham số, nhận {a.Count}");
             double result = Convert.ToDouble(a[0]);
             for (int idx = 1; idx < a.Count; idx++)
                 result = Math.Min(result, Convert.ToDouble(a[idx]));
@@ -538,21 +538,21 @@ public static class Builtins
             return Math.Log10(Convert.ToDouble(a[0]));
         }));
 
-        global.GanDay("làm_tròn", new BuiltinValue("làm_tròn", (i, a, d) =>
+        global.GanDay("lam_tron", new BuiltinValue("lam_tron", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("làm_tròn", 1, a.Count, d);
+            YeucauSoLuongThamSo("lam_tron", 1, a.Count, d);
             return (double)Math.Round(Convert.ToDouble(a[0]));
         }));
 
-        global.GanDay("làm_nguyên", new BuiltinValue("làm_nguyên", (i, a, d) =>
+        global.GanDay("lam_nguyen", new BuiltinValue("lam_nguyen", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("làm_nguyên", 1, a.Count, d);
+            YeucauSoLuongThamSo("lam_nguyen", 1, a.Count, d);
             return (double)Math.Floor(Convert.ToDouble(a[0]));
         }));
 
-        global.GanDay("làm_tròn_lên", new BuiltinValue("làm_tròn_lên", (i, a, d) =>
+        global.GanDay("lam_tron_len", new BuiltinValue("lam_tron_len", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("làm_tròn_lên", 1, a.Count, d);
+            YeucauSoLuongThamSo("lam_tron_len", 1, a.Count, d);
             return (double)Math.Ceiling(Convert.ToDouble(a[0]));
         }));
 
@@ -605,16 +605,16 @@ public static class Builtins
             YeucauSoLuongThamSo("dem_nguoc", 1, a.Count, d);
             int ms = Convert.ToInt32(a[0]);
             Thread.Sleep(ms);
-            return "hết giờ";
+            return "hết gio";
         }));
 
         // ─── HTTP builtins ─────────────────────────────────────────
 
-        global.GanDay("lấy", new BuiltinValue("lấy", (i, a, d) =>
+        global.GanDay("lay", new BuiltinValue("lay", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("lấy", 1, a.Count, d);
+            YeucauSoLuongThamSo("lay", 1, a.Count, d);
             if (a[0] is not string url)
-                throw Loi(d, $"lấy cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"lay cần chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             try
             {
                 var response = _http.GetAsync(url).GetAwaiter().GetResult();
@@ -623,15 +623,15 @@ public static class Builtins
             }
             catch (Exception ex)
             {
-                throw Loi(d, $"lấy thất bại: {ex.Message}");
+                throw Loi(d, $"lay thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("gửi", new BuiltinValue("gửi", (i, a, d) =>
+        global.GanDay("gui", new BuiltinValue("gui", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("gửi", 2, a.Count, d);
+            YeucauSoLuongThamSo("gui", 2, a.Count, d);
             if (a[0] is not string url)
-                throw Loi(d, $"gửi tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"gui tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             try
             {
                 var content = new StringContent(
@@ -644,17 +644,17 @@ public static class Builtins
             }
             catch (Exception ex)
             {
-                throw Loi(d, $"gửi thất bại: {ex.Message}");
+                throw Loi(d, $"gui thất bại: {ex.Message}");
             }
         }));
 
-        global.GanDay("gửi_chuỗi", new BuiltinValue("gửi_chuỗi", (i, a, d) =>
+        global.GanDay("gui_chuoi", new BuiltinValue("gui_chuoi", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("gửi_chuỗi", 3, a.Count, d);
+            YeucauSoLuongThamSo("gui_chuoi", 3, a.Count, d);
             if (a[0] is not string url)
-                throw Loi(d, $"gửi_chuỗi tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
+                throw Loi(d, $"gui_chuoi tham số 1 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[0])}");
             if (a[2] is not string contentType)
-                throw Loi(d, $"gửi_chuỗi tham số 3 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[2])}");
+                throw Loi(d, $"gui_chuoi tham số 3 phải là chuỗi, nhận {Interpreter.ChuoiHoa(a[2])}");
             try
             {
                 var content = new StringContent(
@@ -667,12 +667,12 @@ public static class Builtins
             }
             catch (Exception ex)
             {
-                throw Loi(d, $"gửi_chuỗi thất bại: {ex.Message}");
+                throw Loi(d, $"gui_chuoi thất bại: {ex.Message}");
             }
         }));
 
-        // ─── GUI: tạo_cửa_sổ ─────────────────────────────────────
-        global.GanDay("tạo_cửa_sổ", new BuiltinValue("tạo_cửa_sổ", (i, a, d) =>
+        // ─── GUI: tao_cua_so ─────────────────────────────────────
+        global.GanDay("tao_cua_so", new BuiltinValue("tao_cua_so", (i, a, d) =>
         {
             _guiInterpreter = i;
             EnsureForm();
@@ -687,10 +687,10 @@ public static class Builtins
             return null;
         }));
 
-        // ─── GUI: tạo_nút ─────────────────────────────────────────
-        global.GanDay("tạo_nút", new BuiltinValue("tạo_nút", (i, a, d) =>
+        // ─── GUI: tao_nut ─────────────────────────────────────────
+        global.GanDay("tao_nut", new BuiltinValue("tao_nut", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tạo_nút", 1, a.Count, d);
+            YeucauSoLuongThamSo("tao_nut", 1, a.Count, d);
             EnsureForm();
             var btn = new System.Windows.Forms.Button();
             btn.Text = Interpreter.ChuoiHoa(a[0]);
@@ -710,8 +710,8 @@ public static class Builtins
             return new WidgetValue(btn, "nút");
         }));
 
-        // ─── GUI: tạo_ô_văn_bản ───────────────────────────────────
-        global.GanDay("tạo_ô_văn_bản", new BuiltinValue("tạo_ô_văn_bản", (i, a, d) =>
+        // ─── GUI: tao_o_van_ban ───────────────────────────────────
+        global.GanDay("tao_o_van_ban", new BuiltinValue("tao_o_van_ban", (i, a, d) =>
         {
             EnsureForm();
             var txt = new System.Windows.Forms.TextBox();
@@ -722,10 +722,10 @@ public static class Builtins
             return new WidgetValue(txt, "ô_văn_bản");
         }));
 
-        // ─── GUI: tạo_nhãn ────────────────────────────────────────
-        global.GanDay("tạo_nhãn", new BuiltinValue("tạo_nhãn", (i, a, d) =>
+        // ─── GUI: tao_nhan ────────────────────────────────────────
+        global.GanDay("tao_nhan", new BuiltinValue("tao_nhan", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("tạo_nhãn", 1, a.Count, d);
+            YeucauSoLuongThamSo("tao_nhan", 1, a.Count, d);
             EnsureForm();
             var lbl = new System.Windows.Forms.Label();
             lbl.Text = Interpreter.ChuoiHoa(a[0]);
@@ -735,8 +735,8 @@ public static class Builtins
             return new WidgetValue(lbl, "nhãn");
         }));
 
-        // ─── GUI: tạo_dòng_chữ ────────────────────────────────────
-        global.GanDay("tạo_dòng_chữ", new BuiltinValue("tạo_dòng_chữ", (i, a, d) =>
+        // ─── GUI: tao_dong_chu ────────────────────────────────────
+        global.GanDay("tao_dong_chu", new BuiltinValue("tao_dong_chu", (i, a, d) =>
         {
             EnsureForm();
             var rtb = new System.Windows.Forms.RichTextBox();
@@ -748,10 +748,10 @@ public static class Builtins
             return new WidgetValue(rtb, "dòng_chữ");
         }));
 
-        // ─── GUI: thêm ────────────────────────────────────────────
-        global.GanDay("thêm_widget", new BuiltinValue("thêm_widget", (i, a, d) =>
+        // ─── GUI: them ────────────────────────────────────────────
+        global.GanDay("them_widget", new BuiltinValue("them_widget", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("thêm_widget", 1, a.Count, d);
+            YeucauSoLuongThamSo("them_widget", 1, a.Count, d);
             EnsureForm();
             var ctrl = GetWidget(a[0]);
             _panel.Controls.Add(ctrl);
@@ -759,7 +759,7 @@ public static class Builtins
         }));
 
         // ─── GUI: chạy ────────────────────────────────────────────
-        global.GanDay("chạy", new BuiltinValue("chạy", (i, a, d) =>
+        global.GanDay("chay", new BuiltinValue("chay", (i, a, d) =>
         {
             EnsureForm();
             _guiInterpreter = i;
@@ -769,70 +769,70 @@ public static class Builtins
             return null;
         }));
 
-        // ─── GUI: đặt_title ───────────────────────────────────────
-        global.GanDay("đặt_title", new BuiltinValue("đặt_title", (i, a, d) =>
+        // ─── GUI: dat_title ───────────────────────────────────────
+        global.GanDay("dat_title", new BuiltinValue("dat_title", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_title", 1, a.Count, d);
+            YeucauSoLuongThamSo("dat_title", 1, a.Count, d);
             EnsureForm();
             _form.Text = Interpreter.ChuoiHoa(a[0]);
             return null;
         }));
 
-        // ─── GUI: đặt_kích_thước ──────────────────────────────────
-        global.GanDay("đặt_kích_thước", new BuiltinValue("đặt_kích_thước", (i, a, d) =>
+        // ─── GUI: dat_kich_thuoc ──────────────────────────────────
+        global.GanDay("dat_kich_thuoc", new BuiltinValue("dat_kich_thuoc", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_kích_thước", 2, a.Count, d);
+            YeucauSoLuongThamSo("dat_kich_thuoc", 2, a.Count, d);
             EnsureForm();
             if (a[0] is double w && a[1] is double h)
                 _form.Size = new System.Drawing.Size((int)w, (int)h);
             return null;
         }));
 
-        // ─── GUI: lấy_văn_bản ─────────────────────────────────────
-        global.GanDay("lấy_văn_bản", new BuiltinValue("lấy_văn_bản", (i, a, d) =>
+        // ─── GUI: lay_van_ban ─────────────────────────────────────
+        global.GanDay("lay_van_ban", new BuiltinValue("lay_van_ban", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("lấy_văn_bản", 1, a.Count, d);
+            YeucauSoLuongThamSo("lay_van_ban", 1, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (ctrl is System.Windows.Forms.TextBox tb) return tb.Text;
             if (ctrl is System.Windows.Forms.RichTextBox rtb) return rtb.Text;
-            throw Loi(d, "lấy_văn_bản chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
+            throw Loi(d, "lay_van_ban chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
         }));
 
-        // ─── GUI: đặt_văn_bản ─────────────────────────────────────
-        global.GanDay("đặt_văn_bản", new BuiltinValue("đặt_văn_bản", (i, a, d) =>
+        // ─── GUI: dat_van_ban ─────────────────────────────────────
+        global.GanDay("dat_van_ban", new BuiltinValue("dat_van_ban", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_văn_bản", 2, a.Count, d);
+            YeucauSoLuongThamSo("dat_van_ban", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             var text = Interpreter.ChuoiHoa(a[1]);
             if (ctrl is System.Windows.Forms.TextBox tb) { tb.Text = text; return null; }
             if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.Text = text; return null; }
             if (ctrl is System.Windows.Forms.Label lbl) { lbl.Text = text; return null; }
             if (ctrl is System.Windows.Forms.Button btn) { btn.Text = text; return null; }
-            throw Loi(d, "đặt_văn_bản không hỗ trợ kiểu widget này");
+            throw Loi(d, "dat_van_ban không hỗ trợ kiểu widget này");
         }));
 
-        // ─── GUI: thêm_dòng ────────────────────────────────────────
-        global.GanDay("thêm_dòng", new BuiltinValue("thêm_dòng", (i, a, d) =>
+        // ─── GUI: them_dong ────────────────────────────────────────
+        global.GanDay("them_dong", new BuiltinValue("them_dong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("thêm_dòng", 2, a.Count, d);
+            YeucauSoLuongThamSo("them_dong", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             var text = Interpreter.ChuoiHoa(a[1]);
             if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.AppendText(text + "\n"); return null; }
-            throw Loi(d, "thêm_dòng chỉ áp dụng cho dòng_chữ");
+            throw Loi(d, "them_dong chỉ áp dụng cho dòng_chữ");
         }));
 
-        // ─── GUI: xóa_trống ───────────────────────────────────────
-        global.GanDay("xóa_trống", new BuiltinValue("xóa_trống", (i, a, d) =>
+        // ─── GUI: xoa_trong ───────────────────────────────────────
+        global.GanDay("xoa_trong", new BuiltinValue("xoa_trong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("xóa_trống", 1, a.Count, d);
+            YeucauSoLuongThamSo("xoa_trong", 1, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (ctrl is System.Windows.Forms.TextBox tb) { tb.Text = ""; return null; }
             if (ctrl is System.Windows.Forms.RichTextBox rtb) { rtb.Text = ""; return null; }
-            throw Loi(d, "xóa_trống chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
+            throw Loi(d, "xoa_trong chỉ áp dụng cho ô_văn_bản hoặc dòng_chữ");
         }));
 
-        // ─── GUI: đóng ─────────────────────────────────────────────
-        global.GanDay("đóng", new BuiltinValue("đóng", (i, a, d) =>
+        // ─── GUI: dong ─────────────────────────────────────────────
+        global.GanDay("dong", new BuiltinValue("dong", (i, a, d) =>
         {
             if (_form != null)
             {
@@ -841,50 +841,50 @@ public static class Builtins
             return null;
         }));
 
-        // ─── GUI: đặt_kích_thước_widget ───────────────────────────
-        global.GanDay("đặt_kích_thước_widget", new BuiltinValue("đặt_kích_thước_widget", (i, a, d) =>
+        // ─── GUI: dat_kich_thuoc_widget ───────────────────────────
+        global.GanDay("dat_kich_thuoc_widget", new BuiltinValue("dat_kich_thuoc_widget", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_kích_thước_widget", 3, a.Count, d);
+            YeucauSoLuongThamSo("dat_kich_thuoc_widget", 3, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (a[1] is double w && a[2] is double h)
                 ctrl.Size = new System.Drawing.Size((int)w, (int)h);
             return null;
         }));
 
-        // ─── GUI: đặt_vị_trí ─────────────────────────────────────
-        global.GanDay("đặt_vị_trí", new BuiltinValue("đặt_vị_trí", (i, a, d) =>
+        // ─── GUI: dat_vi_tri ─────────────────────────────────────
+        global.GanDay("dat_vi_tri", new BuiltinValue("dat_vi_tri", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_vị_trí", 3, a.Count, d);
+            YeucauSoLuongThamSo("dat_vi_tri", 3, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (a[1] is double x && a[2] is double y)
                 ctrl.Location = new System.Drawing.Point((int)x, (int)y);
             return null;
         }));
 
-        // ─── GUI: đặt_font ────────────────────────────────────────
-        global.GanDay("đặt_font", new BuiltinValue("đặt_font", (i, a, d) =>
+        // ─── GUI: dat_font ────────────────────────────────────────
+        global.GanDay("dat_font", new BuiltinValue("dat_font", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_font", 2, a.Count, d);
+            YeucauSoLuongThamSo("dat_font", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (a[1] is double size)
                 ctrl.Font = new System.Drawing.Font("Consolas", (float)size);
             return null;
         }));
 
-        // ─── GUI: đặt_màu_nền ─────────────────────────────────────
-        global.GanDay("đặt_màu_nền", new BuiltinValue("đặt_màu_nền", (i, a, d) =>
+        // ─── GUI: dat_mau_nen ─────────────────────────────────────
+        global.GanDay("dat_mau_nen", new BuiltinValue("dat_mau_nen", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_màu_nền", 2, a.Count, d);
+            YeucauSoLuongThamSo("dat_mau_nen", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             var colorName = Interpreter.ChuoiHoa(a[1]);
             ctrl.BackColor = System.Drawing.Color.FromName(colorName);
             return null;
         }));
 
-        // ─── GUI: đặt_màu_chữ ─────────────────────────────────────
-        global.GanDay("đặt_màu_chữ", new BuiltinValue("đặt_màu_chữ", (i, a, d) =>
+        // ─── GUI: dat_mau_chu ─────────────────────────────────────
+        global.GanDay("dat_mau_chu", new BuiltinValue("dat_mau_chu", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_màu_chữ", 2, a.Count, d);
+            YeucauSoLuongThamSo("dat_mau_chu", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             var colorName = Interpreter.ChuoiHoa(a[1]);
             ctrl.ForeColor = System.Drawing.Color.FromName(colorName);
@@ -892,7 +892,7 @@ public static class Builtins
         }));
 
         // ─── GUI: tạo_text_editor ──────────────────────────────────
-        global.GanDay("tạo_text_editor", new BuiltinValue("tạo_text_editor", (i, a, d) =>
+        global.GanDay("tao_text_editor", new BuiltinValue("tao_text_editor", (i, a, d) =>
         {
             EnsureForm();
             var rtb = new System.Windows.Forms.RichTextBox();
@@ -911,7 +911,7 @@ public static class Builtins
         }));
 
         // ─── GUI: tạo_output ───────────────────────────────────────
-        global.GanDay("tạo_output", new BuiltinValue("tạo_output", (i, a, d) =>
+        global.GanDay("tao_output", new BuiltinValue("tao_output", (i, a, d) =>
         {
             EnsureForm();
             var rtb = new System.Windows.Forms.RichTextBox();
@@ -928,7 +928,7 @@ public static class Builtins
         }));
 
         // ─── GUI: tạo_panel ────────────────────────────────────────
-        global.GanDay("tạo_panel", new BuiltinValue("tạo_panel", (i, a, d) =>
+        global.GanDay("tao_panel", new BuiltinValue("tao_panel", (i, a, d) =>
         {
             EnsureForm();
             var panel = new System.Windows.Forms.Panel();
@@ -939,10 +939,10 @@ public static class Builtins
             return new WidgetValue(panel, "panel");
         }));
 
-        // ─── GUI: thêm_vào_panel ──────────────────────────────────
-        global.GanDay("thêm_vào_panel", new BuiltinValue("thêm_vào_panel", (i, a, d) =>
+        // ─── GUI: them_vao_panel ──────────────────────────────────
+        global.GanDay("them_vao_panel", new BuiltinValue("them_vao_panel", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("thêm_vào_panel", 2, a.Count, d);
+            YeucauSoLuongThamSo("them_vao_panel", 2, a.Count, d);
             var panelCtrl = GetWidget(a[0]);
             var childCtrl = GetWidget(a[1]);
             if (panelCtrl is System.Windows.Forms.Panel panel)
@@ -950,8 +950,8 @@ public static class Builtins
             return null;
         }));
 
-        // ─── GUI: hộp_thoại_mở_file ────────────────────────────────
-        global.GanDay("hộp_thoại_mở_file", new BuiltinValue("hộp_thoại_mở_file", (i, a, d) =>
+        // ─── GUI: hop_thoai_mo_file ────────────────────────────────
+        global.GanDay("hop_thoai_mo_file", new BuiltinValue("hop_thoai_mo_file", (i, a, d) =>
         {
             var filter = a.Count >= 1 ? Interpreter.ChuoiHoa(a[0]) : "VietLang (*.vl)|*.vl|All (*.*)|*.*";
             var ofd = new System.Windows.Forms.OpenFileDialog();
@@ -961,8 +961,8 @@ public static class Builtins
             return "";
         }));
 
-        // ─── GUI: hộp_thoại_lưu_file ───────────────────────────────
-        global.GanDay("hộp_thoại_lưu_file", new BuiltinValue("hộp_thoại_lưu_file", (i, a, d) =>
+        // ─── GUI: hop_thoai_luu_file ───────────────────────────────
+        global.GanDay("hop_thoai_luu_file", new BuiltinValue("hop_thoai_luu_file", (i, a, d) =>
         {
             var filter = a.Count >= 1 ? Interpreter.ChuoiHoa(a[0]) : "VietLang (*.vl)|*.vl|All (*.*)|*.*";
             var sfd = new System.Windows.Forms.SaveFileDialog();
@@ -972,10 +972,10 @@ public static class Builtins
             return "";
         }));
 
-        // ─── GUI: lấy_dòng ─────────────────────────────────────────
-        global.GanDay("lấy_dòng", new BuiltinValue("lấy_dòng", (i, a, d) =>
+        // ─── GUI: lay_dòng ─────────────────────────────────────────
+        global.GanDay("lay_dong", new BuiltinValue("lay_dong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("lấy_dòng", 2, a.Count, d);
+            YeucauSoLuongThamSo("lay_dong", 2, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (a[1] is double lineNo && ctrl is System.Windows.Forms.RichTextBox rtb)
             {
@@ -986,10 +986,10 @@ public static class Builtins
             return "";
         }));
 
-        // ─── GUI: đặt_dòng ─────────────────────────────────────────
-        global.GanDay("đặt_dòng", new BuiltinValue("đặt_dòng", (i, a, d) =>
+        // ─── GUI: dat_dong ─────────────────────────────────────────
+        global.GanDay("dat_dong", new BuiltinValue("dat_dong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đặt_dòng", 3, a.Count, d);
+            YeucauSoLuongThamSo("dat_dong", 3, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (a[1] is double lineNo && ctrl is System.Windows.Forms.RichTextBox rtb)
             {
@@ -1001,10 +1001,10 @@ public static class Builtins
             return null;
         }));
 
-        // ─── GUI: đếm_dòng ─────────────────────────────────────────
-        global.GanDay("đếm_dòng", new BuiltinValue("đếm_dòng", (i, a, d) =>
+        // ─── GUI: dem_dong ─────────────────────────────────────────
+        global.GanDay("dem_dong", new BuiltinValue("dem_dong", (i, a, d) =>
         {
-            YeucauSoLuongThamSo("đếm_dòng", 1, a.Count, d);
+            YeucauSoLuongThamSo("dem_dong", 1, a.Count, d);
             var ctrl = GetWidget(a[0]);
             if (ctrl is System.Windows.Forms.RichTextBox rtb)
                 return (double)rtb.Lines.Length;

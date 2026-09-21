@@ -1,0 +1,3 @@
+﻿# test_args.vl
+tham_số = lay_tham_so()
+in_ra("len:", do_dai(tham_số))

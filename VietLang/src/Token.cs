@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VietLang;
 
@@ -34,12 +34,12 @@ public enum TokenKind
     CUOI_CUNG,   // cuối_cùng  (finally)
     NEM,         // ném         (raise)
     KHAI_BAO,    // khai_báo    (import)
-    CHUAN_HOA,            // chuẩn_hóa         (normalize)
-    TIM_TU,               // tìm_từ            (find_word)
-    TACH_TU,              // tách_từ            (word_split)
-    TACH_CAU,             // tách_câu            (sentence_split)
-    DEM_TU,               // đếm_từ            (count_words)
-    CHUAN_HOA_TIM_KIEM,   // chuẩn_hóa_tìm_kiếm (normalize_for_search)
+    CHUAN_HOA,            // chuan_hoa         (normalize)
+    TIM_TU,               // tim_tu            (find_word)
+    TACH_TU,              // tach_tu            (word_split)
+    TACH_CAU,             // tach_cau            (sentence_split)
+    DEM_TU,               // dem_tu            (count_words)
+    CHUAN_HOA_TIM_KIEM,   // chuan_hoa_tim_kiem (normalize_for_search)
 
     // toán tử
     CONG,                  // +
@@ -71,12 +71,12 @@ public enum TokenKind
     // method name keywords
     TIM,          // tìm
     THAY,         // thay
-    CAT,          // cắt
-    CHUA,         // chứa
-    PHAN_TACH,    // phân_tách
-    LOC,          // lọc
+    CAT,          // cat
+    CHUA,         // chua
+    PHAN_TACH,    // phan_tach
+    LOC,          // loc
     MAP,          // map
-    GOP,          // gộp
+    GOP,          // gop
 
     NEWLINE,  // kết thúc lệnh (\r?\n)
     EOF

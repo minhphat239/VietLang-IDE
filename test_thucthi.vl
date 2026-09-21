@@ -1,3 +1,0 @@
-# test_thucthi.vl
-nội_dung = đọc_file("D:\\Documents\\VietLang\\test_simple.vl")
-thực_thi(nội_dung)

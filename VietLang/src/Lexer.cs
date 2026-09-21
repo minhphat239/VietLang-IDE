@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -49,18 +49,18 @@ public sealed class Lexer
             ["khai_báo"] = TokenKind.KHAI_BAO,
             ["tìm"] = TokenKind.TIM,
             ["thay"] = TokenKind.THAY,
-            ["cắt"] = TokenKind.CAT,
-            ["chứa"] = TokenKind.CHUA,
-            ["phân_tách"] = TokenKind.PHAN_TACH,
-            ["lọc"] = TokenKind.LOC,
+            ["cat"] = TokenKind.CAT,
+            ["chua"] = TokenKind.CHUA,
+            ["phan_tach"] = TokenKind.PHAN_TACH,
+            ["loc"] = TokenKind.LOC,
             ["map"] = TokenKind.MAP,
-            ["gộp"] = TokenKind.GOP,
-            ["chuẩn_hóa"] = TokenKind.CHUAN_HOA,
-            ["tìm_từ"] = TokenKind.TIM_TU,
-            ["tách_từ"] = TokenKind.TACH_TU,
-            ["tách_câu"] = TokenKind.TACH_CAU,
-            ["đếm_từ"] = TokenKind.DEM_TU,
-            ["chuẩn_hóa_tìm_kiếm"] = TokenKind.CHUAN_HOA_TIM_KIEM,
+            ["gop"] = TokenKind.GOP,
+            ["chuan_hoa"] = TokenKind.CHUAN_HOA,
+            ["tim_tu"] = TokenKind.TIM_TU,
+            ["tach_tu"] = TokenKind.TACH_TU,
+            ["tach_cau"] = TokenKind.TACH_CAU,
+            ["dem_tu"] = TokenKind.DEM_TU,
+            ["chuan_hoa_tim_kiem"] = TokenKind.CHUAN_HOA_TIM_KIEM,
         };
 
     // Bảng gợi ý từ khóa thiếu dấu (ASCII -> gợi ý đúng). `ham`, `lop`, `va`... vẫn là
@@ -87,17 +87,26 @@ public sealed class Lexer
             ["khai_bao"] = "khai_báo",
             ["tim"] = "tìm",
             ["thay"] = "thay",
-            ["cat"] = "cắt",
-            ["chua"] = "chứa",
-            ["phan_tach"] = "phân_tách",
-            ["loc"] = "lọc",
-            ["gop"] = "gộp",
-            ["chuan_hoa"] = "chuẩn_hóa",
-            ["tim_tu"] = "tìm_từ",
-            ["tach_tu"] = "tách_từ",
-            ["tach_cau"] = "tách_câu",
-            ["dem_tu"] = "đếm_từ",
-            ["chuan_hoa_tim_kiem"] = "chuẩn_hóa_tìm_kiếm",
+            ["cat"] = "cat",
+            ["chua"] = "chua",
+            ["phan_tach"] = "phan_tach",
+            ["loc"] = "loc",
+            ["gop"] = "gop",
+            ["chuan_hoa"] = "chuan_hoa",
+            ["tim_tu"] = "tim_tu",
+            ["tach_tu"] = "tach_tu",
+            ["tach_cau"] = "tach_cau",
+            ["dem_tu"] = "dem_tu",
+            ["chuan_hoa_tim_kiem"] = "chuan_hoa_tim_kiem",
+            ["bay_gio"] = "bay_gio",
+            ["gio"] = "gio",
+            ["ngay"] = "ngay",
+            ["thoi_gian"] = "thoi_gian",
+            ["dem_nguoc"] = "dem_nguoc",
+            ["thay_the"] = "thay_the",
+            ["in_mau"] = "in_mau",
+            ["sao_copy"] = "sao_chep",
+            ["so_nguyen"] = "so_nguyen",
         };
 
     /// <summary>Tra gợi ý cho identifier ThiếuDau (bỏ dấu + lowercase), không khớp trả null.</summary>

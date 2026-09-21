@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietLang", "VietLang\VietLang.csproj", "{7FE14B4B-8ADC-4B71-96C1-96C45B79BEBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VietLangIDE", "VietLangIDE\VietLangIDE.csproj", "{197153E7-0C25-4C60-B48B-0950D8BBDE31}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FE14B4B-8ADC-4B71-96C1-96C45B79BEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FE14B4B-8ADC-4B71-96C1-96C45B79BEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FE14B4B-8ADC-4B71-96C1-96C45B79BEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FE14B4B-8ADC-4B71-96C1-96C45B79BEBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{197153E7-0C25-4C60-B48B-0950D8BBDE31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{197153E7-0C25-4C60-B48B-0950D8BBDE31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{197153E7-0C25-4C60-B48B-0950D8BBDE31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{197153E7-0C25-4C60-B48B-0950D8BBDE31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

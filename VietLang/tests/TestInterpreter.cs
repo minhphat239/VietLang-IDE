@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -49,7 +49,7 @@ public static class TestInterpreter
         return sw.ToString().Replace("\r\n", "\n").Trim('\n');
     }
 
-    /// <summary>Chạy source, phải ném RuntimeError có chứa cụm mong đợi.</summary>
+    /// <summary>Chạy source, phải ném RuntimeError có chua cụm mong đợi.</summary>
     private static void ChayLoi(string src, string maCu = null)
     {
         try
@@ -62,7 +62,7 @@ public static class TestInterpreter
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chua '{maCu}'");
     }
 
     // ─── Test ────────────────────────────────────────────────────────
@@ -103,10 +103,10 @@ public static class TestInterpreter
         return KiemTra(Chay(src) == "120", "gt(5) = 120");
     }
 
-    // 6. Hàm nhiều tham số + chuỗi (dùng chuyển_chuỗi vì `+` không nối số vào chuỗi).
+    // 6. Hàm nhiều tham số + chuỗi (dùng chuyen_chuoi vì `+` không nối số vào chuỗi).
     private static bool TestHamChuoi()
     {
-        string src = "hàm chào(t, tuoi) {\n  trả_về \"Xin chào \" + t + \", \" + chuyển_chuỗi(tuoi)\n}\n" +
+        string src = "hàm chào(t, tuoi) {\n  trả_về \"Xin chào \" + t + \", \" + chuyen_chuoi(tuoi)\n}\n" +
                      "in_ra(chào(\"An\", 20))";
         return KiemTra(Chay(src) == "Xin chào An, 20", "chào(An, 20)");
     }
@@ -123,24 +123,24 @@ public static class TestInterpreter
         return KiemTra(Chay(src) == "Xin chào Minh", "Nguoi('Minh').xin_chao()");
     }
 
-    // 8. Mảng đầy đủ: gán a[i], thêm, độ_dài, for-in.
+    // 8. Mảng đầy đủ: gán a[i], them, do_dai, for-in.
     private static bool TestMang()
     {
         string src = "a = [1, 2, 3]\n" +
                      "a[1] = 9\n" +
-                     "thêm(a, 4)\n" +
-                     "in_ra(độ_dài(a))\n" +
+                     "them(a, 4)\n" +
+                     "in_ra(do_dai(a))\n" +
                      "với x trong a {\n  in_ra(x)\n}";
-        return KiemTra(Chay(src) == "4\n1\n9\n3\n4", "độ_dài=4, các phần tử 1 9 3 4");
+        return KiemTra(Chay(src) == "4\n1\n9\n3\n4", "do_dai=4, các phần tử 1 9 3 4");
     }
 
-    // 9. Chuỗi: độ_dài + a[0].
+    // 9. Chuỗi: do_dai + a[0].
     private static bool TestChuoi()
     {
         string src = "a = \"hello\"\n" +
-                     "in_ra(độ_dài(a))\n" +
+                     "in_ra(do_dai(a))\n" +
                      "in_ra(a[0])";
-        return KiemTra(Chay(src) == "5\nh", "độ_dài('hello')=5, 'hello'[0]='h'");
+        return KiemTra(Chay(src) == "5\nh", "do_dai('hello')=5, 'hello'[0]='h'");
     }
 
     // 10. Chân trị: rỗng / "" / 0 / [] đều falsy → không_thì.
@@ -170,13 +170,13 @@ public static class TestInterpreter
         return KiemTra(Chay(src) == "1\n3\n4\n7", "tiếp bỏ 2, dừng tại 4, dem()=7");
     }
 
-    // 12. Lỗi runtime: chia 0, biến chưa gán, index ngoài mảng, chuyển_số fail.
+    // 12. Lỗi runtime: chia 0, biến chưa gán, index ngoài mảng, chuyen_so fail.
     private static bool TestLoiRuntime()
     {
         ChayLoi("x = 1 / 0", "chia cho số 0");
         ChayLoi("in_ra(biến_lạ)", "chưa được gán");
         ChayLoi("a = [1, 2, 3]\nin_ra(a[5])", "ngoài phạm vi");
-        ChayLoi("in_ra(chuyển_số(\"abc\"))", "không chuyển được");
+        ChayLoi("in_ra(chuyen_so(\"abc\"))", "không chuyển được");
         return true;
     }
 
@@ -193,7 +193,7 @@ public static class TestInterpreter
         string src = "lớp HinhChuNhat {\n" +
                      "  hàm khởi_tạo(w, h) { this.w = w; this.h = h }\n" +
                      "  hàm dien_tich() { trả_về this.w * this.h }\n" +
-                     "  hàm mo_ta() { trả_về \"Diện tích: \" + chuyển_chuỗi(this.dien_tich()) }\n" +
+                     "  hàm mo_ta() { trả_về \"Diện tích: \" + chuyen_chuoi(this.dien_tich()) }\n" +
                      "}\n" +
                      "r = HinhChuNhat(3, 4)\n" +
                      "in_ra(r.dien_tich())\n" +

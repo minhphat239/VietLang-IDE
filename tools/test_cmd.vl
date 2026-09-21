@@ -1,0 +1,3 @@
+﻿# test_cmd.vl
+kq = chay_lenh("echo hello")
+in_ra(kq)

@@ -1,23 +1,23 @@
-# watch_mode.vl — Theo dõi file .vl và tự chạy lại khi thay đổi
+﻿# watch_mode.vl — Theo dõi file .vl và tự chạy lại khi thay đổi
 # Cách dùng: vietlang watch_mode.vl <file.vl>
 
-tham_số = lấy_tham_số()
-độ_dài_ts = độ_dài(tham_số)
+tham_số = lay_tham_so()
+do_dai_ts = do_dai(tham_số)
 
-nếu độ_dài_ts == 0 {
+nếu do_dai_ts == 0 {
   in_mau("Cách dùng: vietlang watch_mode.vl <file.vl>", "yellow")
   in_ra("Ví dụ: vietlang watch_mode.vl demo\\bai_01.vl")
-  thoát()
+  thoat()
 }
 
 file_path = tham_số[0]
 
-nếu không tồn_tại(file_path) {
+nếu không ton_tai(file_path) {
   in_mau("Không tìm thấy file: " + file_path, "red")
-  thoát()
+  thoat()
 }
 
-xóa_màn_hình()
+xoa_man_hinh()
 in_mau("═══════════════════════════════════════════", "cyan")
 in_mau("  WATCH MODE — " + file_path, "cyan")
 in_mau("═══════════════════════════════════════════", "cyan")
@@ -28,30 +28,30 @@ lần_chạy = 0
 
 trong_lúc đúng {
   thử {
-    nội_dung_mới = đọc_file(file_path)
+    nội_dung_mới = doc_file(file_path)
   } ngoại_lệ (e) {
     in_mau("Lỗi đọc file: " + e, "red")
-    chạy_lệnh("ping -n 2 127.0.0.1 > nul")
+    chay_lenh("ping -n 2 127.0.0.1 > nul")
     tiếp
   }
 
   nếu nội_dung_mới != nội_dung_cu {
-    xóa_màn_hình()
+    xoa_man_hinh()
     lần_chạy = lần_chạy + 1
     in_mau("═══════════════════════════════════════════", "cyan")
     in_mau("  WATCH MODE — " + file_path, "cyan")
     in_mau("═══════════════════════════════════════════", "cyan")
-    in_ra("Lần chạy: " + chuyển_chuỗi(lần_chạy))
+    in_ra("Lần chạy: " + chuyen_chuoi(lần_chạy))
     in_ra("")
     nội_dung_cu = nội_dung_mới
-    kết_quả = chạy_lệnh("vietlang.cmd " + file_path)
-    nếu độ_dài(kết_quả) > 0 {
+    kết_quả = chay_lenh("vietlang.cmd " + file_path)
+    nếu do_dai(kết_quả) > 0 {
       in_ra(kết_quả)
     }
     in_ra("")
-    in_mau("── Đang theo dõi... Ctrl+C để thoát ──", "yellow")
+    in_mau("── Đang theo dõi... Ctrl+C để thoat ──", "yellow")
   }
 
   # Chờ ~1 giây rồi kiểm tra lại
-  chạy_lệnh("ping -n 2 127.0.0.1 > nul")
+  chay_lenh("ping -n 2 127.0.0.1 > nul")
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -57,7 +57,7 @@ public static class TestDict
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chua '{maCu}'");
     }
 
     // 1. Tạo dict + truy cập
@@ -70,8 +70,8 @@ public static class TestDict
     // 2. Dict rỗng + kích thước 0
     private static bool TestDictRong()
     {
-        string src = "t = { }\nin_ra(độ_dài(t))";
-        return KiemTra(Chay(src) == "0", "dict rỗng độ_dài = 0");
+        string src = "t = { }\nin_ra(do_dai(t))";
+        return KiemTra(Chay(src) == "0", "dict rỗng do_dai = 0");
     }
 
     // 3. Dict lồng
@@ -88,11 +88,11 @@ public static class TestDict
         return KiemTra(Chay(src) == "đúng\nsai", ".có() đúng/sai");
     }
 
-    // 5. .lấy(): có → value, không có → rỗng
+    // 5. .lay(): có → value, không có → rỗng
     private static bool TestDictLayKey()
     {
-        string src = "t = { \"a\": 1 }\nin_ra(t.lấy(\"a\"))\nin_ra(t.lấy(\"khong\") == rỗng)";
-        return KiemTra(Chay(src) == "1\nđúng", ".lấy() value hoặc rỗng");
+        string src = "t = { \"a\": 1 }\nin_ra(t.lay(\"a\"))\nin_ra(t.lay(\"khong\") == rỗng)";
+        return KiemTra(Chay(src) == "1\nđúng", ".lay() value hoặc rỗng");
     }
 
     // 6. .xóa(): xóa key tồn tại → trả value, xóa key không có → rỗng
@@ -101,26 +101,26 @@ public static class TestDict
         string src = "t = { \"a\": 1, \"b\": 2 }\n" +
                      "r1 = t.xóa(\"a\")\n" +
                      "in_ra(r1)\n" +
-                     "in_ra(t.kích_thước())\n" +
+                     "in_ra(t.kich_thuoc())\n" +
                      "r2 = t.xóa(\"khong\")\n" +
                      "in_ra(r2 == rỗng)";
         return KiemTra(Chay(src) == "1\n1\nđúng", ".xóa() value hoặc rỗng");
     }
 
-    // 7. .tất_cả(): trả mảng keys
+    // 7. .tat_ca(): trả mảng keys
     private static bool TestDictTatCa()
     {
         string src = "t = { \"a\": 1, \"b\": 2, \"c\": 3 }\n" +
-                     "k = t.tất_cả()\n" +
-                     "in_ra(độ_dài(k))";
-        return KiemTra(Chay(src) == "3", ".tất_cả() trả 3 keys");
+                     "k = t.tat_ca()\n" +
+                     "in_ra(do_dai(k))";
+        return KiemTra(Chay(src) == "3", ".tat_ca() trả 3 keys");
     }
 
-    // 8. .kích_thước(): số đúng
+    // 8. .kich_thuoc(): số đúng
     private static bool TestDictKichThuoc()
     {
-        string src = "t = { \"a\": 1, \"b\": 2 }\nin_ra(t.kích_thước())";
-        return KiemTra(Chay(src) == "2", ".kích_thước() == 2");
+        string src = "t = { \"a\": 1, \"b\": 2 }\nin_ra(t.kich_thuoc())";
+        return KiemTra(Chay(src) == "2", ".kich_thuoc() == 2");
     }
 
     // 9. Gán index: t["x"] = 5 → t["x"] == 5; gán đè
@@ -168,10 +168,10 @@ public static class TestDict
     // 13. Dict nhiều key + NLP demo
     private static bool TestDictNhieuKeyNLP()
     {
-        string src = "t = { \"chuẩn_hóa\": \"normalize\", \"tách_từ\": \"segment\" }\n" +
-                     "in_ra(t.có(\"chuẩn_hóa\"))\n" +
-                     "in_ra(t.lấy(\"tách_từ\"))\n" +
-                     "in_ra(t.kích_thước())";
+        string src = "t = { \"chuan_hoa\": \"normalize\", \"tach_tu\": \"segment\" }\n" +
+                     "in_ra(t.có(\"chuan_hoa\"))\n" +
+                     "in_ra(t.lay(\"tach_tu\"))\n" +
+                     "in_ra(t.kich_thuoc())";
         return KiemTra(Chay(src) == "đúng\nsegment\n2", "NLP dict keys");
     }
 }

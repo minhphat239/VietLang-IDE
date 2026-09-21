@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -145,7 +145,7 @@ public static class TestLexer
     private static bool TestNewlineTrongNgoac()
     {
         var t = Tok("hàm f(\n a,\n b\n)\n");
-        KiemTra(t.Count(x => x.Kind == TokenKind.NEWLINE) == 1, "chỉ 1 NEWLINE (sau dấu đóng ) — trong () bị bỏ");
+        KiemTra(t.Count(x => x.Kind == TokenKind.NEWLINE) == 1, "chỉ 1 NEWLINE (sau dấu dong ) — trong () bị bỏ");
         KiemTra(t[^1].Kind == TokenKind.NEWLINE, "NEWLINE nằm sau ')'");
         KiemTra(t[0].Kind == TokenKind.HAM, "hàm");
         KiemTra(t[1].Kind == TokenKind.TEN && t[1].Lexeme == "f", "f");

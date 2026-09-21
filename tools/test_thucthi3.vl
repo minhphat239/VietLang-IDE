@@ -1,0 +1,3 @@
+﻿# test_thucthi3.vl
+thuc_thi("hàm cộng(a, b) { trả_về a + b }")
+in_ra(cộng(3, 4))

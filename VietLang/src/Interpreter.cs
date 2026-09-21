@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -77,7 +77,7 @@ public sealed class PhamVi
     // Gán trực tiếp vào phạm vi này (không đi chain) — dùng cho khai báo/biến phạm vi cục bộ.
     public void GanDay(string ten, object giaTri) => _cuc[ten] = giaTri;
 
-    /// <summary>Trả về dictionary chứa tất cả biến từ phạm vi này lên đến gốc (global scope).</summary>
+    /// <summary>Trả về dictionary chua tất cả biến từ phạm vi này lên đến gốc (global scope).</summary>
     public Dictionary<string, object> LayTatCa()
     {
         var result = new Dictionary<string, object>();
@@ -133,7 +133,7 @@ public sealed class DictValue
     public override string ToString() => $"<dict ({Pairs.Count} phần tử)>";
 }
 
-/// <summary>Method đã bind trên dict (gộp dict + tên method).</summary>
+/// <summary>Method đã bind trên dict (gop dict + tên method).</summary>
 internal sealed class DictMethodValue
 {
     public DictValue Dict { get; }
@@ -141,7 +141,7 @@ internal sealed class DictMethodValue
     public DictMethodValue(DictValue dict, string ten) { Dict = dict; Ten = ten; }
 }
 
-/// <summary>Method đã bind trên chuỗi/mảng (gộp object + tên method).</summary>
+/// <summary>Method đã bind trên chuỗi/mảng (gop object + tên method).</summary>
 internal sealed class BoundMethodValue
 {
     public object Obj { get; }
@@ -209,7 +209,7 @@ public sealed class Interpreter
         ['Ỳ'] = 'Y', ['Ý'] = 'Y', ['Ỷ'] = 'Y', ['Ỹ'] = 'Y', ['Ỵ'] = 'Y',
     };
 
-    /// <summary>Bỏ dấu tiếng Việt: chuẩn_hóa(text) → string.</summary>
+    /// <summary>Bỏ dấu tiếng Việt: chuan_hoa(text) → string.</summary>
     public static string BoDauTiengViet(string text)
     {
         if (text == null) return null;
@@ -222,7 +222,7 @@ public sealed class Interpreter
     /// <summary>Độ sâu vòng lặp hiện tại — để nhận diện `dừng`/`tiếp` ngoài vòng lặp.</summary>
     private int _loopDepth;
 
-    /// <summary>Môi trường hiện tại — để builtin `thực_thi` có thể truy cập env của caller.</summary>
+    /// <summary>Môi trường hiện tại — để builtin `thuc_thi` có thể truy cập env của caller.</summary>
     internal PhamVi CurrentEnv { get; private set; }
 
     /// <summary>Thư mục hiện tại (dùng để resolve đường dẫn import tương đối).</summary>
@@ -428,7 +428,7 @@ public sealed class Interpreter
     {
         object pathVal = Eval(im.Path, env, im.Dong);
         if (pathVal is not string path)
-            throw Loi(im.Dong, "đường dẫn nhập phải là chuỗi");
+            throw Loi(im.Dong, "đường dẫn nhap phải là chuỗi");
 
         string fullPath = Path.GetFullPath(Path.Combine(_currentDir, path));
 
@@ -822,20 +822,20 @@ public sealed class Interpreter
                 if (args.Count != 1) throw Loi(dong, $"hàm 'có' cần 1 tham số, nhận {args.Count}");
                 if (args[0] is not string kCo) throw Loi(dong, "tham số của 'có' phải là chuỗi");
                 return dict.Pairs.ContainsKey(kCo);
-            case "lấy":
-                if (args.Count != 1) throw Loi(dong, $"hàm 'lấy' cần 1 tham số, nhận {args.Count}");
-                if (args[0] is not string kLay) throw Loi(dong, "tham số của 'lấy' phải là chuỗi");
+            case "lay":
+                if (args.Count != 1) throw Loi(dong, $"hàm 'lay' cần 1 tham số, nhận {args.Count}");
+                if (args[0] is not string kLay) throw Loi(dong, "tham số của 'lay' phải là chuỗi");
                 return dict.Pairs.TryGetValue(kLay, out var vLay) ? vLay : null;
             case "xóa":
                 if (args.Count != 1) throw Loi(dong, $"hàm 'xóa' cần 1 tham số, nhận {args.Count}");
                 if (args[0] is not string kXoa) throw Loi(dong, "tham số của 'xóa' phải là chuỗi");
                 if (dict.Pairs.TryGetValue(kXoa, out var vXoa)) { dict.Pairs.Remove(kXoa); return vXoa; }
                 return null;
-            case "tất_cả":
-                if (args.Count != 0) throw Loi(dong, $"hàm 'tất_cả' cần 0 tham số, nhận {args.Count}");
+            case "tat_ca":
+                if (args.Count != 0) throw Loi(dong, $"hàm 'tat_ca' cần 0 tham số, nhận {args.Count}");
                 return dict.Pairs.Keys.ToList<object>();
-            case "kích_thước":
-                if (args.Count != 0) throw Loi(dong, $"hàm 'kích_thước' cần 0 tham số, nhận {args.Count}");
+            case "kich_thuoc":
+                if (args.Count != 0) throw Loi(dong, $"hàm 'kich_thuoc' cần 0 tham số, nhận {args.Count}");
                 return (double)dict.Pairs.Count;
             default:
                 throw Loi(dong, $"dict không có method '{dm.Ten}'");
@@ -857,16 +857,16 @@ public sealed class Interpreter
                     if (args[0] is not string oldS) throw Loi(dong, "tham số 1 của 'thay' phải là chuỗi");
                     if (args[1] is not string newS) throw Loi(dong, "tham số 2 của 'thay' phải là chuỗi");
                     return s.Replace(oldS, newS);
-                case "cắt":
-                    if (args.Count != 0) throw Loi(dong, $"hàm 'cắt' cần 0 tham số, nhận {args.Count}");
+                case "cat":
+                    if (args.Count != 0) throw Loi(dong, $"hàm 'cat' cần 0 tham số, nhận {args.Count}");
                     return s.Trim();
-                case "chứa":
-                    if (args.Count != 1) throw Loi(dong, $"hàm 'chứa' cần 1 tham số, nhận {args.Count}");
-                    if (args[0] is not string subC) throw Loi(dong, "tham số của 'chứa' phải là chuỗi");
+                case "chua":
+                    if (args.Count != 1) throw Loi(dong, $"hàm 'chua' cần 1 tham số, nhận {args.Count}");
+                    if (args[0] is not string subC) throw Loi(dong, "tham số của 'chua' phải là chuỗi");
                     return s.Contains(subC);
-                case "phân_tách":
-                    if (args.Count != 1) throw Loi(dong, $"hàm 'phân_tách' cần 1 tham số, nhận {args.Count}");
-                    if (args[0] is not string delim) throw Loi(dong, "tham số của 'phân_tách' phải là chuỗi");
+                case "phan_tach":
+                    if (args.Count != 1) throw Loi(dong, $"hàm 'phan_tach' cần 1 tham số, nhận {args.Count}");
+                    if (args[0] is not string delim) throw Loi(dong, "tham số của 'phan_tach' phải là chuỗi");
                     return s.Split(new[] { delim }, StringSplitOptions.None).ToList<object>();
                 default:
                     throw Loi(dong, $"chuỗi không có method '{bmv.Ten}'");
@@ -876,16 +876,16 @@ public sealed class Interpreter
         {
             switch (bmv.Ten)
             {
-                case "lọc":
-                    if (args.Count != 0) throw Loi(dong, $"hàm 'lọc' cần 0 tham số, nhận {args.Count}");
+                case "loc":
+                    if (args.Count != 0) throw Loi(dong, $"hàm 'loc' cần 0 tham số, nhận {args.Count}");
                     return arr.Where(x => Chantri(x)).ToList();
                 case "map":
                     if (args.Count != 1) throw Loi(dong, $"hàm 'map' cần 1 tham số, nhận {args.Count}");
                     if (args[0] is not FunctionValue fnMap) throw Loi(dong, "tham số của 'map' phải là hàm");
                     return arr.Select(x => GoiHam(fnMap, null, new List<object> { x }, dong)).ToList();
-                case "gộp":
-                    if (args.Count != 1) throw Loi(dong, $"hàm 'gộp' cần 1 tham số, nhận {args.Count}");
-                    if (args[0] is not List<object> other) throw Loi(dong, "tham số của 'gộp' phải là mảng");
+                case "gop":
+                    if (args.Count != 1) throw Loi(dong, $"hàm 'gop' cần 1 tham số, nhận {args.Count}");
+                    if (args[0] is not List<object> other) throw Loi(dong, "tham số của 'gop' phải là mảng");
                     return arr.Concat(other).ToList();
                 default:
                     throw Loi(dong, $"mảng không có method '{bmv.Ten}'");
@@ -953,7 +953,7 @@ public sealed class Interpreter
         return "giá trị";
     }
 
-    /// <summary>Stringify giá trị cho in_ra/chuyển_chuỗi/thông báo lỗi.</summary>
+    /// <summary>Stringify giá trị cho in_ra/chuyen_chuoi/thông báo lỗi.</summary>
     public static string ChuoiHoa(object v)
     {
         if (v == null) return "rỗng";

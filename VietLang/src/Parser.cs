@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace VietLang;
@@ -509,11 +509,11 @@ public sealed class Parser
                 entries.Add((key, value));
                 BoQuaNganCach();
             } while (Cuon(TokenKind.DAU_PHAY));
-            Nhan(TokenKind.DAU_DONG_NGOAC_NHON, "dấu '}' đóng dict");
+            Nhan(TokenKind.DAU_DONG_NGOAC_NHON, "dấu '}' dong dict");
             return new DictLit(entries);
         }
         // Không match pattern dict → dict rỗng
-        Nhan(TokenKind.DAU_DONG_NGOAC_NHON, "dấu '}' đóng dict rỗng");
+        Nhan(TokenKind.DAU_DONG_NGOAC_NHON, "dấu '}' dong dict rỗng");
         return new DictLit();
     }
 

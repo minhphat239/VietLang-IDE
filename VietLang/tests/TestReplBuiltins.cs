@@ -71,7 +71,7 @@ public static class TestReplBuiltins
     {
         var env = new PhamVi();
         Builtins.DangKy(env);
-        KT(env.Lay("thoát", out _), "thoát chua duoc dang ky");
+        KT(env.Lay("thoat", out _), "thoat chua duoc dang ky");
         return true;
     }
 
@@ -81,7 +81,7 @@ public static class TestReplBuiltins
         File.WriteAllText(p, "xin chao", System.Text.Encoding.UTF8);
         try
         {
-            string o = Chay("in_ra(đọc_file(" + Q(p) + "))");
+            string o = Chay("in_ra(doc_file(" + Q(p) + "))");
             KT(o == "xin chao", "mong 'xin chao', nhan '" + o + "'");
             return true;
         }
@@ -90,7 +90,7 @@ public static class TestReplBuiltins
 
     private static bool TestDocFileKhongTonTai()
     {
-        ChayLoi("đọc_file(\"nonexistent_file_vl.txt\")", "không tìm thấy tệp");
+        ChayLoi("doc_file(\"nonexistent_file_vl.txt\")", "không tìm thấy tệp");
         return true;
     }
 
@@ -127,7 +127,7 @@ public static class TestReplBuiltins
         File.WriteAllText(p, "x", System.Text.Encoding.UTF8);
         try
         {
-            string o = Chay("in_ra(tồn_tại(" + Q(p) + "))");
+            string o = Chay("in_ra(ton_tai(" + Q(p) + "))");
             KT(o == "đúng", "mong 'đúng', nhan '" + o + "'");
             return true;
         }
@@ -140,7 +140,7 @@ public static class TestReplBuiltins
         Directory.CreateDirectory(d);
         try
         {
-            string o = Chay("in_ra(tồn_tại(" + Q(d) + "))");
+            string o = Chay("in_ra(ton_tai(" + Q(d) + "))");
             KT(o == "đúng", "mong 'đúng', nhan '" + o + "'");
             return true;
         }
@@ -149,14 +149,14 @@ public static class TestReplBuiltins
 
     private static bool TestTonTaiKhongTonTai()
     {
-        string o = Chay("in_ra(tồn_tại(\"nonexistent_vl_path.txt\"))");
+        string o = Chay("in_ra(ton_tai(\"nonexistent_vl_path.txt\"))");
         KT(o == "sai", "mong 'sai', nhan '" + o + "'");
         return true;
     }
 
     private static bool TestJsonPhanTachObject()
     {
-        object r = ChayGiaTri("kq = json_phân_tách(\"{\\\"ten\\\":\\\"An\\\",\\\"tuoi\\\":25}\")");
+        object r = ChayGiaTri("kq = json_phan_tach(\"{\\\"ten\\\":\\\"An\\\",\\\"tuoi\\\":25}\")");
         KT(r is DictValue, "mong DictValue, nhan " + r?.GetType());
         var dv = (DictValue)r;
         KT(dv.Pairs["ten"] as string == "An", "ten sai");
@@ -166,7 +166,7 @@ public static class TestReplBuiltins
 
     private static bool TestJsonPhanTachArray()
     {
-        object r = ChayGiaTri("kq = json_phân_tách(\"[1,2,3]\")");
+        object r = ChayGiaTri("kq = json_phan_tach(\"[1,2,3]\")");
         KT(r is List<object>, "mong List, nhan " + r?.GetType());
         var l = (List<object>)r;
         KT(l.Count == 3, "mong 3 ptu, nhan " + l.Count);
@@ -176,7 +176,7 @@ public static class TestReplBuiltins
 
     private static bool TestJsonGopDict()
     {
-        object r = ChayGiaTri("d = {\"a\": 1, \"b\": 2}\nkq = json_gộp(d)");
+        object r = ChayGiaTri("d = {\"a\": 1, \"b\": 2}\nkq = json_gop(d)");
         KT(r is string, "mong string, nhan " + r?.GetType());
         string json = (string)r;
         KT(json.Contains("\"a\""), "json khong chua 'a': " + json);
@@ -186,7 +186,7 @@ public static class TestReplBuiltins
 
     private static bool TestJsonRoundTrip()
     {
-        object r = ChayGiaTri("d = {\"x\": 10, \"y\": \"hello\"}\nkq = json_phân_tách(json_gộp(d))");
+        object r = ChayGiaTri("d = {\"x\": 10, \"y\": \"hello\"}\nkq = json_phan_tach(json_gop(d))");
         KT(r is DictValue, "mong DictValue, nhan " + r?.GetType());
         var d2 = (DictValue)r;
         KT(d2.Pairs["x"] is double && (double)d2.Pairs["x"] == 10.0, "x sai");
@@ -196,7 +196,7 @@ public static class TestReplBuiltins
 
     private static bool TestJsonNested()
     {
-        object r = ChayGiaTri("kq = json_phân_tách(\"{\\\"a\\\":[1,2],\\\"b\\\":{\\\"c\\\":true}}\")");
+        object r = ChayGiaTri("kq = json_phan_tach(\"{\\\"a\\\":[1,2],\\\"b\\\":{\\\"c\\\":true}}\")");
         KT(r is DictValue, "mong DictValue, nhan " + r?.GetType());
         var d = (DictValue)r;
         KT(d.Pairs["a"] is List<object>, "a khong phai list");
@@ -208,7 +208,7 @@ public static class TestReplBuiltins
 
     private static bool TestJsonBoolNull()
     {
-        object r = ChayGiaTri("kq = json_phân_tách(\"{\\\"ok\\\":true,\\\"no\\\":false,\\\"empty\\\":null}\")");
+        object r = ChayGiaTri("kq = json_phan_tach(\"{\\\"ok\\\":true,\\\"no\\\":false,\\\"empty\\\":null}\")");
         KT(r is DictValue, "mong DictValue, nhan " + r?.GetType());
         var d = (DictValue)r;
         KT(d.Pairs["ok"] is bool && (bool)d.Pairs["ok"] == true, "ok sai");

@@ -1,20 +1,20 @@
-# script_runner.vl — chạy file .vl với error display đẹp
+﻿# script_runner.vl — chạy file .vl với error display đẹp
 # Chạy: vietlang script_runner.vl <file.vl>
 
-tham_số = lấy_tham_số()
-độ_dài_ts = độ_dài(tham_số)
+tham_số = lay_tham_so()
+do_dai_ts = do_dai(tham_số)
 
-nếu độ_dài_ts == 0 {
+nếu do_dai_ts == 0 {
   in_mau("Cách dùng: vietlang script_runner.vl <file.vl>", "yellow")
   in_mau("Tùy chọn: --time  (hiển thị thời gian chạy)", "yellow")
-  thoát()
+  thoat()
 }
 
 file_path = ""
 hien_thi_thoi_gian = sai
 
 idx = 0
-trong_lúc idx < độ_dài_ts {
+trong_lúc idx < do_dai_ts {
   arg = tham_số[idx]
   nếu arg == "--time" {
     hien_thi_thoi_gian = đúng
@@ -26,34 +26,34 @@ trong_lúc idx < độ_dài_ts {
 
 nếu file_path == "" {
   in_mau("Thiếu file path!", "red")
-  thoát()
+  thoat()
 }
 
-nếu không tồn_tại(file_path) {
+nếu không ton_tai(file_path) {
   in_mau("Không tìm thấy file: " + file_path, "red")
-  thoát()
+  thoat()
 }
 
 bắt_đầu = ""
 nếu hien_thi_thoi_gian {
-  bắt_đầu = chạy_lệnh("powershell -Command (Get-Date).Ticks")
+  bắt_đầu = chay_lenh("powershell -Command (Get-Date).Ticks")
 }
 
-kết_quả = chạy_lệnh("vietlang.cmd " + file_path)
+kết_quả = chay_lenh("vietlang.cmd " + file_path)
 
 nếu hien_thi_thoi_gian {
-  kt = chạy_lệnh("powershell -Command (Get-Date).Ticks")
-  tg = (chuyển_số(kt) - chuyển_số(bắt_đầu)) / 10000
-  in_mau("Thời gian: " + chuyển_chuỗi(tg) + "ms", "cyan")
+  kt = chay_lenh("powershell -Command (Get-Date).Ticks")
+  tg = (chuyen_so(kt) - chuyen_so(bắt_đầu)) / 10000
+  in_mau("Thời gian: " + chuyen_chuoi(tg) + "ms", "cyan")
 }
 
-vi_tri = tìm_từ(kết_quả, "Lỗi")
-nếu độ_dài(vi_tri) > 0 {
+vi_tri = tim_tu(kết_quả, "Lỗi")
+nếu do_dai(vi_tri) > 0 {
   in_mau("═══════════════════════════════════════════════════", "red")
   in_mau("  LỖI: " + kết_quả, "red")
   in_mau("═══════════════════════════════════════════════════", "red")
 } không_thì {
-  nếu độ_dài(kết_quả) > 0 {
+  nếu do_dai(kết_quả) > 0 {
     in_ra(kết_quả)
   }
 }

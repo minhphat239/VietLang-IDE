@@ -1,9 +1,9 @@
-# ============================================================
+﻿# ============================================================
 # VietLang — bài 01: quản lý học sinh
 # Chạy (từ thư mục gốc): dotnet run --project VietLang -- demo/bai_01.vl
 # Gồm: lớp, constructor (khởi_tạo), this, hàm, mảng, vòng lặp,
 # if-chain nhiều dòng, nối chuỗi, các builtin
-# in_ra / độ_dài / thêm / chuyển_số / chuyển_chuỗi
+# in_ra / do_dai / them / chuyen_so / chuyen_chuoi
 # ============================================================
 
 # 1. Lớp HọcSinh: constructor + phương thức
@@ -13,7 +13,7 @@ lớp HọcSinh {
     this.điểm = điểm
   }
   hàm mô_tả() {
-    trả_về this.tên + " — điểm " + chuyển_chuỗi(this.điểm)
+    trả_về this.tên + " — điểm " + chuyen_chuoi(this.điểm)
   }
   hàm xếp_loại() {           # if-chain nhiều dòng
     nếu this.điểm >= 8 {
@@ -37,16 +37,16 @@ hàm trung_bình(danh_sách) {
   với hs trong danh_sách {
     tổng = tổng + hs.điểm
   }
-  trả_về tổng / độ_dài(danh_sách)
+  trả_về tổng / do_dai(danh_sách)
 }
 
 # 3. Tạo mảng học sinh (gọi lớp như hàm để tạo đối tượng)
-ds = [HọcSinh("Nguyễn Văn An", 9), HọcSinh("Trần Thị Bình", 7), HọcSinh("Lê Văn Cường", chuyển_số("5"))]
-thêm(ds, HọcSinh("Phạm Thu Dung", 3))
+ds = [HọcSinh("Nguyễn Văn An", 9), HọcSinh("Trần Thị Bình", 7), HọcSinh("Lê Văn Cường", chuyen_so("5"))]
+them(ds, HọcSinh("Phạm Thu Dung", 3))
 
 # 4. Vòng lặp trong_lúc + truy cập mảng theo chỉ số
 i = 0
-n = độ_dài(ds)
+n = do_dai(ds)
 trong_lúc i < n {
   hs = ds[i]
   in_ra(i + 1, hs.mô_tả(), "→", hs.xếp_loại())

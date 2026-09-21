@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -54,7 +54,7 @@ public static class TestMethods
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception(maCu == null ? "phải ném RuntimeError" : $"phải ném RuntimeError chua '{maCu}'");
     }
 
     // 1. s.tìm("sub") — tìm thấy
@@ -78,32 +78,32 @@ public static class TestMethods
         return KiemTra(Chay(src) == "Xin Chao ban", "thay ok");
     }
 
-    // 4. s.cắt() — bỏ whitespace
+    // 4. s.cat() — bỏ whitespace
     private static bool TestStrCat()
     {
-        string src = "s = \"  Xin Chao  \"\nin_ra(s.cắt())";
-        return KiemTra(Chay(src) == "Xin Chao", "cắt whitespace");
+        string src = "s = \"  Xin Chao  \"\nin_ra(s.cat())";
+        return KiemTra(Chay(src) == "Xin Chao", "cat whitespace");
     }
 
-    // 5. s.chứa("sub") — đúng / sai
+    // 5. s.chua("sub") — đúng / sai
     private static bool TestStrChua()
     {
-        string src = "s = \"Xin Chao\"\nin_ra(s.chứa(\"Chao\"))\nin_ra(s.chứa(\"Hello\"))";
-        return KiemTra(Chay(src) == "đúng\nsai", "chứa ok");
+        string src = "s = \"Xin Chao\"\nin_ra(s.chua(\"Chao\"))\nin_ra(s.chua(\"Hello\"))";
+        return KiemTra(Chay(src) == "đúng\nsai", "chua ok");
     }
 
-    // 6. s.phân_tách("dấu") — tách chuỗi
+    // 6. s.phan_tach("dấu") — tách chuỗi
     private static bool TestStrPhanTach()
     {
-        string src = "s = \"Xin,Chao,The,Gioi\"\na = s.phân_tách(\",\")\nin_ra(độ_dài(a))\nin_ra(a[1])";
-        return KiemTra(Chay(src) == "4\nChao", "phân_tách ok");
+        string src = "s = \"Xin,Chao,The,Gioi\"\na = s.phan_tach(\",\")\nin_ra(do_dai(a))\nin_ra(a[1])";
+        return KiemTra(Chay(src) == "4\nChao", "phan_tach ok");
     }
 
-    // 7. a.lọc() — bỏ falsy
+    // 7. a.loc() — bỏ falsy
     private static bool TestArrLoc()
     {
-        string src = "a = [1, 0, 2, \"\", 3]\nb = a.lọc()\nin_ra(độ_dài(b))\nin_ra(b[0])\nin_ra(b[1])\nin_ra(b[2])";
-        return KiemTra(Chay(src) == "3\n1\n2\n3", "lọc bỏ 0 và \"\"");
+        string src = "a = [1, 0, 2, \"\", 3]\nb = a.loc()\nin_ra(do_dai(b))\nin_ra(b[0])\nin_ra(b[1])\nin_ra(b[2])";
+        return KiemTra(Chay(src) == "3\n1\n2\n3", "loc bỏ 0 và \"\"");
     }
 
     // 8. a.map(hàm) — áp dụng hàm
@@ -113,18 +113,18 @@ public static class TestMethods
         return KiemTra(Chay(src) == "2\n4\n6", "map nhân 2");
     }
 
-    // 9. a.gộp([4, 5]) — concat
+    // 9. a.gop([4, 5]) — concat
     private static bool TestArrGop()
     {
-        string src = "a = [1, 2]\nb = a.gộp([3, 4])\nin_ra(độ_dài(b))\nin_ra(b[2])\nin_ra(b[3])";
-        return KiemTra(Chay(src) == "4\n3\n4", "gộp ok");
+        string src = "a = [1, 2]\nb = a.gop([3, 4])\nin_ra(do_dai(b))\nin_ra(b[2])\nin_ra(b[3])";
+        return KiemTra(Chay(src) == "4\n3\n4", "gop ok");
     }
 
     // 10. Method không tồn tại trên kiểu → RuntimeError
     private static bool TestMethodLoi()
     {
         ChayLoi("in_ra((5).tìm(\"x\"))", "không có thuộc tính");
-        ChayLoi("in_ra((5).lọc())", "không có thuộc tính");
+        ChayLoi("in_ra((5).loc())", "không có thuộc tính");
         return true;
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace VietLang;
@@ -47,28 +47,28 @@ public static class TestEval
 
     private static bool TestBieuThuc()
     {
-        object r = ChayGiaTri("kq = thực_thi(\"1 + 2\")");
+        object r = ChayGiaTri("kq = thuc_thi(\"1 + 2\")");
         KT(r is double && (double)r == 3.0, "mong 3, nhan " + r);
         return true;
     }
 
     private static bool TestChiaSeState()
     {
-        object r = ChayGiaTri("x = 5\nkq = thực_thi(\"x + 1\")");
+        object r = ChayGiaTri("x = 5\nkq = thuc_thi(\"x + 1\")");
         KT(r is double && (double)r == 6.0, "mong 6, nhan " + r);
         return true;
     }
 
     private static bool TestDinhNghiaHam()
     {
-        object r = ChayGiaTri("thực_thi(\"hàm f() { trả_về 42 }\")\nkq = thực_thi(\"f()\")");
+        object r = ChayGiaTri("thuc_thi(\"hàm f() { trả_về 42 }\")\nkq = thuc_thi(\"f()\")");
         KT(r is double && (double)r == 42.0, "mong 42, nhan " + r);
         return true;
     }
 
     private static bool TestLoiBienChuaGan()
     {
-        object r = ChayGiaTri("kq = thực_thi(\"xyz\")");
+        object r = ChayGiaTri("kq = thuc_thi(\"xyz\")");
         KT(r is string, "mong string error, nhan " + r?.GetType());
         string s = (string)r;
         KT(s.Contains("chưa được gán"), "mong 'chưa được gán' trong error, nhan: " + s);
@@ -77,7 +77,7 @@ public static class TestEval
 
     private static bool TestLoiCuPhap()
     {
-        object r = ChayGiaTri("kq = thực_thi(\"1 +\")");
+        object r = ChayGiaTri("kq = thuc_thi(\"1 +\")");
         KT(r is string, "mong string error, nhan " + r?.GetType());
         string s = (string)r;
         KT(s.Contains("lỗi cú pháp"), "mong 'lỗi cú pháp' trong error, nhan: " + s);
@@ -86,21 +86,21 @@ public static class TestEval
 
     private static bool TestChuoiRong()
     {
-        object r = ChayGiaTri("kq = thực_thi(\"\")");
+        object r = ChayGiaTri("kq = thuc_thi(\"\")");
         KT(r == null, "mong null, nhan " + r);
         return true;
     }
 
     private static bool TestInRa()
     {
-        string o = Chay("thực_thi(\"in_ra(99)\")");
+        string o = Chay("thuc_thi(\"in_ra(99)\")");
         KT(o == "99", "mong '99', nhan '" + o + "'");
         return true;
     }
 
     private static bool TestSideEffectMang()
     {
-        string o = Chay("a = []\nthực_thi(\"thêm(a, 1)\")\nin_ra(a)");
+        string o = Chay("a = []\nthuc_thi(\"them(a, 1)\")\nin_ra(a)");
         KT(o == "[1]", "mong '[1]', nhan '" + o + "'");
         return true;
     }

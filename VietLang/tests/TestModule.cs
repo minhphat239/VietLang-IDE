@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -82,7 +82,7 @@ public static class TestModule
         {
             if (File.Exists(fullPath)) File.Delete(fullPath);
         }
-        throw new Exception($"phải ném RuntimeError chứa '{maCu}'");
+        throw new Exception($"phải ném RuntimeError chua '{maCu}'");
     }
 
     private static void ChayLoiParse(string src, string maCu)
@@ -97,7 +97,7 @@ public static class TestModule
                 KiemTra(e.Message.Contains(maCu), $"Lỗi thiếu cụm '{maCu}': {e.Message}");
             return;
         }
-        throw new Exception($"phải ném ParseError chứa '{maCu}'");
+        throw new Exception($"phải ném ParseError chua '{maCu}'");
     }
 
     // 1. Import cơ bản: math.vl định nghĩa cộng(1,2) → 3
@@ -160,7 +160,7 @@ public static class TestModule
         return KiemTra(output == "A\nB", $"ham_a()=A, ham_b()=B, got '{output}'");
     }
 
-    // 7. Nested import: file nhập file khác
+    // 7. Nested import: file nhap file khác
     private static bool TestModuleNested()
     {
         string output = ChayTep("test_nested.vl",
@@ -169,7 +169,7 @@ public static class TestModule
         return KiemTra(output == "25", $"vuông(5)=25, got '{output}'");
     }
 
-    // 8. Parser lỗi: nhập không phải chuỗi
+    // 8. Parser lỗi: nhap không phải chuỗi
     private static bool TestModuleKhongDuongDanChuoi()
     {
         ChayLoiParse("khai_báo x", "khai_báo cần đường dẫn dạng chuỗi");

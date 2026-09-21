@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace VietLang;
 
@@ -48,7 +48,7 @@ public static class TestSessionBuiltins
 
     private static bool TestLayTatCaBien()
     {
-        object r = ChayGiaTri("x = 10\nt = lấy_tất_cả_biến()\nkq = t");
+        object r = ChayGiaTri("x = 10\nt = lay_tat_ca_bien()\nkq = t");
         KT(r is DictValue, "mong DictValue, nhan " + r?.GetType());
         var d = (DictValue)r;
         KT(d.Pairs.ContainsKey("x"), "khong co key 'x'");
@@ -65,7 +65,7 @@ public static class TestSessionBuiltins
             var env = new PhamVi();
             Builtins.DangKy(env);
             var interp = new Interpreter();
-            interp.ChayVoiGlobal(env, Parser.Parse("gán_biến(\"y\", 42)"));
+            interp.ChayVoiGlobal(env, Parser.Parse("gan_bien(\"y\", 42)"));
             env.Lay("y", out var val);
             KT(val is double && (double)val == 42.0, "y phai la 42, nhan " + val);
             return true;
@@ -82,7 +82,7 @@ public static class TestSessionBuiltins
             var env = new PhamVi();
             Builtins.DangKy(env);
             var interp = new Interpreter();
-            interp.ChayVoiGlobal(env, Parser.Parse("x = 10\nt = lấy_tất_cả_biến()"));
+            interp.ChayVoiGlobal(env, Parser.Parse("x = 10\nt = lay_tat_ca_bien()"));
             env.Lay("t", out var val);
             KT(val is DictValue, "mong DictValue, nhan " + val?.GetType());
             var d = (DictValue)val;
@@ -94,7 +94,7 @@ public static class TestSessionBuiltins
 
     private static bool TestGanBienChuoiInRa()
     {
-        string output = Chay("gán_biến(\"z\", \"hello\")\nin_ra(z)");
+        string output = Chay("gan_bien(\"z\", \"hello\")\nin_ra(z)");
         KT(output == "hello", "mong 'hello', nhan '" + output + "'");
         return true;
     }
